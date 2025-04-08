@@ -4,6 +4,7 @@ const path = require('path');
 // const { fileURLToPath } = require('url');
 const handleXmlFromFile = require('./utils/handleXmlFromFile');
 const handleProductImageUpdate = require('./utils/handleProductImageUpdate')
+const handleAttributeUpdate = require('./utils/handleAttributeUpdate')
 
 // App setup
 const app = express();
@@ -38,8 +39,26 @@ app.get('/process/productimage/update', async (req, res) => {
     const itemJson = await handleXmlFromFile(filePath, 'ProductData', true);
 
     // Now pass the parsed JSON to the next function for further processing
-    const productImages = handleProductImageUpdate(itemJson);
-    res.json(productImages);
+    const productImageRequestBodies = handleProductImageUpdate(itemJson);
+    res.json(productImageRequestBodies);
+  } 
+  catch (error) {
+    console.error('Error processing product image update:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+//update or add an attribute
+app.get('/process/attributes/update', async (req, res) => {
+  try {
+    // Define the parameters (these could come from req.body, req.query, etc.)
+    const filePath = path.join(__dirname, 'uploads', 'AttributesEcommerce/Attributes-2025-01-30_13.11.10.xml');
+    // Wait for the XML to be read and parsed into JSON
+    const attributeJson = await handleXmlFromFile(filePath, 'AttributeData', true);
+
+    // Now pass the parsed JSON to the next function for further processing
+    const attributeRequestBodies = handleAttributeUpdate(attributeJson);
+    res.json(attributeRequestBodies);
   } 
   catch (error) {
     console.error('Error processing product image update:', error);
