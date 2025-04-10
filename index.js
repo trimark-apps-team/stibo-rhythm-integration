@@ -5,8 +5,9 @@ const livereload = require('livereload');
 const connectLivereload = require('connect-livereload');
 
 const handleXmlFromFile = require('./utils/handleXmlFromFile');
-const handleProductImageUpdate = require('./utils/handleProductImageUpdate');
+const handleProductImageUpdate = require('./utils/products/handleProductImageUpdate');
 const handleAttributeUpdate = require('./utils/handleAttributeUpdate');
+const handleProductAttributeUpdate = require('./utils/products/handleProductAttributeUpdate')
 
 // App setup
 const app = express();
@@ -49,18 +50,6 @@ app.get('/process/classification', async (req, res) => {
   res.json(jsonData);
 });
 
-app.get('/process/productimage/update', async (req, res) => {
-  try {
-    const filePath = path.join(__dirname, 'uploads', 'ProductsEcommerce/Products-2025-04-02_20.22.08.xml');
-    const itemJson = await handleXmlFromFile(filePath, 'ProductData', true);
-    const productImageRequestBodies = handleProductImageUpdate(itemJson);
-    res.json(productImageRequestBodies);
-  } catch (error) {
-    console.error('Error processing product image update:', error);
-    res.status(500).send('Internal Server Error');
-  }
-});
-
 app.get('/process/attributes/update', async (req, res) => {
   try {
     const filePath = path.join(__dirname, 'uploads', 'AttributesEcommerce/Attributes-2025-01-30_13.11.10.xml');
@@ -73,11 +62,35 @@ app.get('/process/attributes/update', async (req, res) => {
   }
 });
 
+app.get('/process/productimage/update', async (req, res) => {
+  try {
+    const filePath = path.join(__dirname, 'uploads', 'ProductsEcommerce/Products-2025-04-02_20.22.08.xml');
+    const itemJson = await handleXmlFromFile(filePath, 'ProductData', true);
+    const productImageRequestBodies = handleProductImageUpdate(itemJson);
+    res.json(productImageRequestBodies);
+  } catch (error) {
+    console.error('Error processing product image update:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+app.get('/process/productattributes/update', async (req, res) => {
+  try {
+    const filePath = path.join(__dirname, 'uploads', 'ProductsEcommerce/Products-2025-04-02_20.22.08.xml');
+    const itemJson = await handleXmlFromFile(filePath, 'ProductData', true);
+    const productAttributeRequestBodies = handleProductAttributeUpdate(itemJson);
+    res.json(productAttributeRequestBodies);
+  } catch (error) {
+    console.error('Error processing product image update:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
 // --- Start Server ---
 app.listen(port, async () => {
   console.log(`🚀 Server running at http://localhost:${port}`);
 
-  // Dynamically import 'open' because it's an ESM module
+  Dynamically import 'open' because it's an ESM module
   try {
     const { default: open } = await import('open');
     open(`http://localhost:${port}`);
@@ -85,7 +98,7 @@ app.listen(port, async () => {
     console.error('Failed to open browser automatically:', err);
   }
 
-  // Trigger browser reload on file changes
+  Trigger browser reload on file changes
   liveReloadServer.server.once('connection', () => {
     setTimeout(() => {
       liveReloadServer.refresh('/');

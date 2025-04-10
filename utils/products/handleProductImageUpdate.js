@@ -2,11 +2,12 @@ function handleProductImageUpdate(itemJson) {
     const productsArray = Object.values(itemJson["data"]["STEP-ProductInformation"].Products.Product);
     console.log(productsArray)
     const productImages = productsArray.map((product) => {
+        console.log(product)
         return {
             pimId: product['ID'],
             keyvalue: product['KeyValue'],
             name: product['Name'],
-            imageurl: product['AssetCrossReference']['Asset']['Values']['Value']['0']
+            imageurl: product['AssetCrossReference']['Asset']['Values']['AssetDownload.AssetURLAttribute']
         }
     })
     const rhythmRequestBodies = productImages.map((image) => {
@@ -27,4 +28,5 @@ function handleProductImageUpdate(itemJson) {
     return rhythmRequestBodies;
 }
 
-module.exports = handleProductImageUpdate;
+
+module.exports =  handleProductImageUpdate ;
