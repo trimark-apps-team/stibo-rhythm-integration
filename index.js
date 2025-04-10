@@ -7,24 +7,44 @@ const connectLivereload = require('connect-livereload');
 const handleXmlFromFile = require('./utils/handleXmlFromFile');
 const handleProductImageUpdate = require('./utils/handleProductImageUpdate');
 const handleAttributeUpdate = require('./utils/handleAttributeUpdate');
+const handleWebCategoryUpdate = require('./utils/handleWebCatagoryUpdate');
 
 // App setup
 const app = express();
 const port = 3000;
 
-// --- LiveReload Setup ---
-const liveReloadServer = livereload.createServer();
-liveReloadServer.watch(path.join(__dirname, 'public'));
-app.use(connectLivereload());
-
-// Static files
-app.use(express.static('public'));
+// Default flag to enable/disable auto-refresh
+let useAutoRefresh = false;
 
 // --- ROUTES ---
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+// Check for the query parameter to enable auto-refresh
+app.use((req, res, next) => {
+  useAutoRefresh = req.query['auto-refresh'] === 'true';  // Set auto-refresh based on the query parameter
+  next();
+});
+
+// --- LiveReload Setup (conditionally enabled) ---
+if (useAutoRefresh) {
+  const liveReloadServer = livereload.createServer();
+  liveReloadServer.watch(path.join(__dirname, 'public'));
+  app.use(connectLivereload());
+
+  // Trigger browser reload on file changes
+  liveReloadServer.server.once('connection', () => {
+    setTimeout(() => {
+      liveReloadServer.refresh('/');
+    }, 100);
+  });
+}
+
+// Static files
+app.use(express.static('public'));
+
+// --- API ROUTES ---
 app.get('/process/products', async (req, res) => {
   const filePath = path.join(__dirname, 'uploads', 'ProductsEcommerce/Products-2025-04-02_20.22.08.xml');
   const jsonData = await handleXmlFromFile(filePath, 'Products', true);
@@ -39,14 +59,9 @@ app.get('/process/attributes', async (req, res) => {
 
 app.get('/process/webclassification', async (req, res) => {
   const filePath = path.join(__dirname, 'uploads', 'WebClassification/WebHierarchy-Catalog-2025-04-03_13.26.20.xml');
-  const jsonData = await handleXmlFromFile(filePath, 'Web Classification', true);
-  res.json(jsonData);
-});
-
-app.get('/process/classification', async (req, res) => {
-  const filePath = path.join(__dirname, 'uploads', 'WebClassification/WebHierarchy-Catalog-2025-04-03_13.26.20.xml');
-  const jsonData = await handleXmlFromFile(filePath, 'Web Classification', true);
-  res.json(jsonData);
+  const webCategoryJson = await handleXmlFromFile(filePath, 'WebClassification', true);
+  const webCategoryRequestBodies = handleWebCategoryUpdate(webCategoryJson);
+  res.json(webCategoryRequestBodies);
 });
 
 app.get('/process/productimage/update', async (req, res) => {
@@ -84,11 +99,4 @@ app.listen(port, async () => {
   } catch (err) {
     console.error('Failed to open browser automatically:', err);
   }
-
-  // Trigger browser reload on file changes
-  liveReloadServer.server.once('connection', () => {
-    setTimeout(() => {
-      liveReloadServer.refresh('/');
-    }, 100);
-  });
 });
