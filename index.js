@@ -43,21 +43,10 @@ app.get('/process/webclassification', async (req, res) => {
   res.json(jsonData);
 });
 
-app.get('/process/class', async (req, res) => {
+app.get('/process/classification', async (req, res) => {
   const filePath = path.join(__dirname, 'uploads', 'WebClassification/WebHierarchy-Catalog-2025-04-03_13.26.20.xml');
   const jsonData = await handleXmlFromFile(filePath, 'Web Classification', true);
   res.json(jsonData);
-});
-
-app.get('/process/classification', async (req, res) => {
-  try {
-    const filePath = path.join(__dirname, 'uploads', 'WebClassification/WebHierarchy-Catalog-2025-04-03_13.26.20.xml');
-    const jsonData = await handleXmlFromFile(filePath, 'Web Classification', true);
-    res.json(jsonData);
-  } catch (error) {
-    console.error('Error processing classification update:', error);
-    res.status(500).send('Internal Server Error');
-  }
 });
 
 app.get('/process/productimage/update', async (req, res) => {
