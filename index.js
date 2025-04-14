@@ -9,6 +9,8 @@ const handleProductImageUpdate = require('./utils/products/handleProductImageUpd
 const handleAttributeUpdate = require('./utils/handleAttributeUpdate');
 const handleWebCategoryUpdate = require('./utils/handleWebCatagoryUpdate');
 const handleProductAttributeUpdate = require('./utils/products/handleProductAttributeUpdate')
+const handleProductResourceUpdate = require('./utils/products/handleProductResourceUpdate')
+const handleProductResourceLinkUpdate = require('./utils/products/handleProductResourceLinkUpdate')
 
 // App setup
 const app = express();
@@ -65,18 +67,6 @@ app.get('/process/webclassification', async (req, res) => {
   res.json(webCategoryRequestBodies);
 });
 
-app.get('/process/productimage/update', async (req, res) => {
-  try {
-    const filePath = path.join(__dirname, 'uploads', 'ProductsEcommerce/Products-2025-04-02_20.22.08.xml');
-    const itemJson = await handleXmlFromFile(filePath, 'ProductData', true);
-    const productImageRequestBodies = handleProductImageUpdate(itemJson);
-    res.json(productImageRequestBodies);
-  } catch (error) {
-    console.error('Error processing product image update:', error);
-    res.status(500).send('Internal Server Error');
-  }
-});
-
 app.get('/process/attributes/update', async (req, res) => {
   try {
     const filePath = path.join(__dirname, 'uploads', 'AttributesEcommerce/Attributes-2025-01-30_13.11.10.xml');
@@ -85,6 +75,48 @@ app.get('/process/attributes/update', async (req, res) => {
     res.json(attributeRequestBodies);
   } catch (error) {
     console.error('Error processing attribute update:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+
+app.get('/process/productresource/update', async (req, res) => {
+  try {
+    const filePath = path.join(__dirname, 'uploads', 'ProductsEcommerce/Products-2025-04-02_20.22.08.xml');
+
+    const itemJson = await handleXmlFromFile(filePath, 'ProductData', true);
+
+    // Wait for all resources to be prepared (downloaded, streamed, etc)
+    //we'll need to call the rhythm api inside this function when ready to send 
+    // file binaries of resources to rhythm
+    const productResources = await handleProductResourceUpdate(itemJson);
+
+    // Now that resources are ready → create Rhythm payload
+    const rhythmRequestBodies = handleProductResourceLinkUpdate(itemJson);
+
+    res.json({
+      preparedResources: productResources.map(resource => ({
+        file: resource.file,
+        headers: resource.headers
+      })),
+      rhythmRequestBodies
+    });
+
+  } catch(error) {
+    console.error('Error processing product resource update:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+
+app.get('/process/productimage/update', async (req, res) => {
+  try {
+    const filePath = path.join(__dirname, 'uploads', 'ProductsEcommerce/Products-2025-04-02_20.22.08.xml');
+    const itemJson = await handleXmlFromFile(filePath, 'ProductData', true);
+    const productImageRequestBodies = handleProductImageUpdate(itemJson);
+    res.json(productImageRequestBodies);
+  } catch (error) {
+    console.error('Error processing product image update:', error);
     res.status(500).send('Internal Server Error');
   }
 });
@@ -106,10 +138,10 @@ app.listen(port, async () => {
   console.log(`🚀 Server running at http://localhost:${port}`);
 
   // Dynamically import 'open' because it's an ESM module
-  try {
-    const { default: open } = await import('open');
-    open(`http://localhost:${port}`);
-  } catch (err) {
-    console.error('Failed to open browser automatically:', err);
-  }
+  // try {
+  //   const { default: open } = await import('open');
+  //   open(`http://localhost:${port}`);
+  // } catch (err) {
+  //   console.error('Failed to open browser automatically:', err);
+  // }
 });

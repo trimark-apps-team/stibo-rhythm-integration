@@ -9,7 +9,8 @@ function handleAttributeUpdate(attributeJson) {
                 "languageCode": "en",
                 "name": attribute['Name']
                 }
-            ]
+            ],
+            "type": "LocaleString"
         }
 
     })
