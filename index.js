@@ -3,6 +3,7 @@ const express = require('express');
 const path = require('path');
 const livereload = require('livereload');
 const connectLivereload = require('connect-livereload');
+const { makeInforRequest } = require('./inforApiClient');
 
 const handleXmlFromFile = require('./utils/handleXmlFromFile');
 const handleProductImageUpdate = require('./utils/products/handleProductImageUpdate');
@@ -130,6 +131,36 @@ app.get('/process/productattributes/update', async (req, res) => {
   } catch (error) {
     console.error('Error processing product image update:', error);
     res.status(500).send('Internal Server Error');
+  }
+});
+
+app.get('/process/productresources/fetch', async (req, res) => {
+  try {
+    const itemNumber = req.query.itemNumber; // Pass item number as query param ?itemNumber=12345
+
+    if (!itemNumber) {
+      return res.status(400).json({ error: 'Missing itemNumber in query' });
+    }
+
+    const config = {
+      tenantId: 'YRKVVJQ426W8Y3Q4_TST',
+      secret: 'ae25ccf025d6460dbe449ddd72747c75',
+      baseUrl: 'https://ecomrestapi-use1.ecom.inforcloudsuite.com/ecomapp',
+      clientEmail: 'wayne.liu@infor.com'
+    };
+
+    const response = await makeInforRequest({
+      ...config,
+      urlPath: `/admin/items/${itemNumber}/resources`,
+      method: 'GET',
+      data: {} // empty body for this endpoint
+    });
+
+    res.json(response);
+
+  } catch (error) {
+    console.error('Error fetching product resources:', error);
+    res.status(500).send('Failed to fetch product resources');
   }
 });
 

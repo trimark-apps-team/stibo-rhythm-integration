@@ -18,7 +18,7 @@ function handleProductImageUpdate(itemJson) {
             imagePayload: [
                 {
                     imageType: "images",
-                    isDefault: false,
+                    isDefault: true,
                     masterImage: image.imageurl,
                     previewImage: image.imageurl,
                     thumbImage: image.imageurl
