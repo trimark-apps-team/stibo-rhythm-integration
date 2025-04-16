@@ -41,38 +41,5 @@
     <li><a href="/process/productattributes/update" target="_blank">🔧 Update Product Attributes</a></li>
     <li><a href="/process/productresource/update" target="_blank">🔧 Update Product Resources</a></li>
   </ul>
-
-
-  <button id="getTokenBtn">Get Token</button>
-  <pre id="result"></pre>
-
-  <script>
-    document.getElementById('getTokenBtn').addEventListener('click', async () => {
-      const clientId = 'YOUR_CLIENT_ID';
-      const clientSecret = 'YOUR_CLIENT_SECRET';
-      const tenantId = 'YRKVVJQ426W8Y3Q4_TST';
-
-      const tokenUrl = `https://mingle-sso.inforcloudsuite.com:443/YRKVVJQ426W8Y3Q4_TST/as/token.oauth2`;
-      const auth = btoa(`${clientId}:${clientSecret}`); // base64 encode
-
-      try {
-        const response = await fetch(tokenUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization': `Basic ${auth}`
-          },
-          body: new URLSearchParams({
-            grant_type: 'client_credentials'
-          })
-        });
-
-        const data = await response.json();
-        document.getElementById('result').textContent = JSON.stringify(data, null, 2);
-      } catch (error) {
-        document.getElementById('result').textContent = '❌ Error: ' + error;
-      }
-    });
-  </script>
 </body>
 </html>

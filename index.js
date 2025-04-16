@@ -140,6 +140,37 @@ app.get('/process/productattributes/update', async (req, res) => {
   }
 });
 
+/** GENERIC API */
+app.get('/process/getGenericToken', async (req, res) => {
+  try {
+    const tokenUrl = 'https://use1-api.rhyl.inforcloudsuite.com/auth/realms/common/protocol/openid-connect/token';
+
+    const payload = new URLSearchParams({
+      grant_type: 'password',
+      username: 'yrkvvjq426w8y3q4_tst.service.account',
+      password: 'yrkvvjq426w8y3q4123$',
+      client_id: 'rhythm-events',
+      client_secret: '3f72dc4c-4f25-44b5-b1fc-bac6cfd57b45'
+    });
+
+    const response = await axios.post(tokenUrl, payload.toString(), {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    });
+
+    res.json(response.data); // This includes access_token, refresh_token, etc.
+
+  } catch (error) {
+    console.error('Token fetch error:', error?.response?.data || error.message);
+    res.status(500).json({
+      message: 'Failed to retrieve token',
+      error: error?.response?.data || error.message
+    });
+  }
+});
+
+
 app.get('/process/productresources/fetch', async (req, res) => {
   try {
     const itemNumber = req.query.itemNumber; // Pass item number as query param ?itemNumber=12345
