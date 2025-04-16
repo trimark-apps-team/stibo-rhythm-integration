@@ -1,6 +1,7 @@
 // Required modules
 require('dotenv').config();
 const express = require('express');
+const axios = require('axios');
 const path = require('path');
 const livereload = require('livereload');
 const connectLivereload = require('connect-livereload');
@@ -8,6 +9,7 @@ const { makeInforRequest } = require('./inforApiClient');
 
 const handleXmlFromFile = require('./utils/handleXmlFromFile');
 const handleProductImageUpdate = require('./utils/products/handleProductImageUpdate');
+const handleCatalogCreate = require('./utils/taxonomy/handleCatalogCreate');
 const handleAttributeUpdate = require('./utils/handleAttributeUpdate');
 const handleWebCategoryUpdate = require('./utils/handleWebCatagoryUpdate');
 const handleProductAttributeUpdate = require('./utils/products/handleProductAttributeUpdate')
@@ -72,6 +74,10 @@ app.get('/process/attributes', async (req, res) => {
   const jsonData = await handleXmlFromFile(filePath, 'Attributes', true);
   res.json(jsonData);
 });
+
+
+
+
 
 app.get('/process/webclassification', async (req, res) => {
   const filePath = path.join(__dirname, 'uploads', 'WebClassification/WebHierarchy-Catalog-2025-04-03_13.26.20.xml');
@@ -146,15 +152,33 @@ app.get('/process/productattributes/update', async (req, res) => {
   }
 });
 
-app.get('/process/productattributes/update', async (req, res) => {
+/** GENERIC API */
+app.get('/process/getGenericToken', async (req, res) => {
   try {
-    const filePath = path.join(__dirname, 'uploads', 'ProductsEcommerce/Products-2025-04-02_20.22.08.xml');
-    const itemJson = await handleXmlFromFile(filePath, 'ProductData', true);
-    const productAttributeRequestBodies = handleProductAttributeUpdate(itemJson);
-    res.json(productAttributeRequestBodies);
+    const tokenUrl = 'https://use1-api.rhyl.inforcloudsuite.com/auth/realms/common/protocol/openid-connect/token';
+
+    const payload = new URLSearchParams({
+      grant_type: 'password',
+      username: 'yrkvvjq426w8y3q4_tst.service.account',
+      password: 'yrkvvjq426w8y3q4123$',
+      client_id: 'rhythm-events',
+      client_secret: '3f72dc4c-4f25-44b5-b1fc-bac6cfd57b45'
+    });
+
+    const response = await axios.post(tokenUrl, payload.toString(), {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    });
+
+    res.json(response.data); // This includes access_token, refresh_token, etc.
+
   } catch (error) {
-    console.error('Error processing product image update:', error);
-    res.status(500).send('Internal Server Error');
+    console.error('Token fetch error:', error?.response?.data || error.message);
+    res.status(500).json({
+      message: 'Failed to retrieve token',
+      error: error?.response?.data || error.message
+    });
   }
 });
 
@@ -187,6 +211,57 @@ app.get('/process/productresources/fetch', async (req, res) => {
     res.status(500).send('Failed to fetch product resources');
   }
 });
+
+/* TAXONOMY */
+
+/* create catalog */
+app.get('/process/catalog/create', async (req, res) => {
+  try {
+    const filePath = path.join(__dirname, 'uploads', 'WebClassification/WebHierarchy-Catalog-2025-04-03_13.26.20.xml');
+    const itemJson = await handleXmlFromFile(filePath, 'CatalogData', true);
+    const payloadType = "Created";
+    const catalogRequestBodies = handleCatalogCreate(itemJson, payloadType);
+    res.json(catalogRequestBodies);
+
+
+  } catch (error) {
+    console.error('Error processing catalog:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+/* update catalog */
+app.get('/process/catalog/update', async (req, res) => {
+  try {
+    const filePath = path.join(__dirname, 'uploads', 'WebClassification/WebHierarchy-Catalog-2025-04-03_13.26.20.xml');
+    const itemJson = await handleXmlFromFile(filePath, 'CatalogData', true);
+    const payloadType = "Updated";
+    const catalogRequestBodies = handleCatalogCreate(itemJson, payloadType);
+    res.json(catalogRequestBodies);
+
+
+  } catch (error) {
+    console.error('Error processing catalog:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+/* delete catalog */
+app.get('/process/catalog/delete', async (req, res) => {
+  try {
+    const filePath = path.join(__dirname, 'uploads', 'WebClassification/WebHierarchy-Catalog-2025-04-03_13.26.20.xml');
+    const itemJson = await handleXmlFromFile(filePath, 'CatalogData', true);
+    const payloadType = "Deleted";
+    const catalogRequestBodies = handleCatalogCreate(itemJson, payloadType);
+    res.json(catalogRequestBodies);
+
+
+  } catch (error) {
+    console.error('Error processing catalog:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
 
 // --- Start Server ---
 app.listen(port, async () => {
