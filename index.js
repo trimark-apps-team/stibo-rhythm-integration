@@ -201,21 +201,54 @@ app.get('/process/productresources/fetch', async (req, res) => {
   }
 });
 
-/* taxonomy */
+/* TAXONOMY */
 
 /* create catalog */
 app.get('/process/catalog/create', async (req, res) => {
- // try {
+  try {
     const filePath = path.join(__dirname, 'uploads', 'WebClassification/WebHierarchy-Catalog-2025-04-03_13.26.20.xml');
     const itemJson = await handleXmlFromFile(filePath, 'CatalogData', true);
-    const catalogRequestBodies = handleCatalogCreate(itemJson);
+    const payloadType = "Created";
+    const catalogRequestBodies = handleCatalogCreate(itemJson, payloadType);
     res.json(catalogRequestBodies);
 
 
- // } catch (error) {
-   // console.error('Error processing catalog:', error);
-   // res.status(500).send('Internal Server Error');
- // }
+  } catch (error) {
+    console.error('Error processing catalog:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+/* update catalog */
+app.get('/process/catalog/update', async (req, res) => {
+  try {
+    const filePath = path.join(__dirname, 'uploads', 'WebClassification/WebHierarchy-Catalog-2025-04-03_13.26.20.xml');
+    const itemJson = await handleXmlFromFile(filePath, 'CatalogData', true);
+    const payloadType = "Updated";
+    const catalogRequestBodies = handleCatalogCreate(itemJson, payloadType);
+    res.json(catalogRequestBodies);
+
+
+  } catch (error) {
+    console.error('Error processing catalog:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+/* delete catalog */
+app.get('/process/catalog/delete', async (req, res) => {
+  try {
+    const filePath = path.join(__dirname, 'uploads', 'WebClassification/WebHierarchy-Catalog-2025-04-03_13.26.20.xml');
+    const itemJson = await handleXmlFromFile(filePath, 'CatalogData', true);
+    const payloadType = "Deleted";
+    const catalogRequestBodies = handleCatalogCreate(itemJson, payloadType);
+    res.json(catalogRequestBodies);
+
+
+  } catch (error) {
+    console.error('Error processing catalog:', error);
+    res.status(500).send('Internal Server Error');
+  }
 });
 
 

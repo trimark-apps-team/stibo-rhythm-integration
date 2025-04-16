@@ -1,4 +1,4 @@
-function handleCatalogCreate({ data }) {
+function handleCatalogCreate({ data }, payloadType) {
   const rootClassification =
     data?.['STEP-ProductInformation']?.Classifications?.Classification?.Rhythm;
 
@@ -10,6 +10,7 @@ function handleCatalogCreate({ data }) {
   const catalogName = typeof nameField === 'object' ? nameField._ || nameField.value : nameField;
   const internalName = `TRMK_${catalogName?.replace(/\s+/g, '')}`;
 
+  // ISO ddtes are required
   const startDate = new Date(rootClassification["PMDM.AT.StartDateTime"]).toISOString();
   const endDate = new Date(rootClassification["PMDM.AT.EndDateTime"]).toISOString();
 
@@ -60,7 +61,7 @@ function handleCatalogCreate({ data }) {
     groupId: 'groupId',
     notes: 'notes',
     source: 'source',
-    type: 'Created',
+    type: payloadType,
   };
 
   return jsonResult;
