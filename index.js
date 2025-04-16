@@ -8,6 +8,7 @@ const { makeInforRequest } = require('./inforApiClient');
 
 const handleXmlFromFile = require('./utils/handleXmlFromFile');
 const handleProductImageUpdate = require('./utils/products/handleProductImageUpdate');
+const handleCatalogCreate = require('./utils/taxonomy/handleCatalogCreate');
 const handleAttributeUpdate = require('./utils/handleAttributeUpdate');
 const handleWebCategoryUpdate = require('./utils/handleWebCatagoryUpdate');
 const handleProductAttributeUpdate = require('./utils/products/handleProductAttributeUpdate')
@@ -170,7 +171,6 @@ app.get('/process/getGenericToken', async (req, res) => {
   }
 });
 
-
 app.get('/process/productresources/fetch', async (req, res) => {
   try {
     const itemNumber = req.query.itemNumber; // Pass item number as query param ?itemNumber=12345
@@ -200,6 +200,24 @@ app.get('/process/productresources/fetch', async (req, res) => {
     res.status(500).send('Failed to fetch product resources');
   }
 });
+
+/* taxonomy */
+
+/* create catalog */
+app.get('/process/catalog/create', async (req, res) => {
+ // try {
+    const filePath = path.join(__dirname, 'uploads', 'WebClassification/WebHierarchy-Catalog-2025-04-03_13.26.20.xml');
+    const itemJson = await handleXmlFromFile(filePath, 'CatalogData', true);
+    const catalogRequestBodies = handleCatalogCreate(itemJson);
+    res.json(catalogRequestBodies);
+
+
+ // } catch (error) {
+   // console.error('Error processing catalog:', error);
+   // res.status(500).send('Internal Server Error');
+ // }
+});
+
 
 // --- Start Server ---
 app.listen(port, async () => {
