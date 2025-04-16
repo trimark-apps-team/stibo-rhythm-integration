@@ -5,7 +5,7 @@ const axios = require('axios');
 const path = require('path');
 const livereload = require('livereload');
 const connectLivereload = require('connect-livereload');
-const { makeInforRequest } = require('./inforApiClient');
+const { makeInforRequest } = require('./infor/inforAPIClient');
 
 const handleXmlFromFile = require('./utils/handleXmlFromFile');
 const handleProductImageUpdate = require('./utils/products/handleProductImageUpdate');
