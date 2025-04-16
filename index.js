@@ -1,10 +1,11 @@
 // Required modules
+require('dotenv').config();
 const express = require('express');
 const axios = require('axios');
 const path = require('path');
 const livereload = require('livereload');
 const connectLivereload = require('connect-livereload');
-const { makeInforRequest } = require('./inforApiClient');
+const { makeInforRequest } = require('./infor/inforAPIClient');
 
 const handleXmlFromFile = require('./utils/handleXmlFromFile');
 const handleProductImageUpdate = require('./utils/products/handleProductImageUpdate');
@@ -28,6 +29,16 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+
+// const https = require('https');
+
+// const agent = new https.Agent({ rejectUnauthorized: false });
+
+// https.get('https://api.ipify.org', { agent }, res => {
+//   res.on('data', d => {
+//     console.log('App Outbound IP:', d.toString());
+//   });
+// });
 
 // Check for the query parameter to enable auto-refresh
 app.use((req, res, next) => {
@@ -181,10 +192,10 @@ app.get('/process/productresources/fetch', async (req, res) => {
     }
 
     const config = {
-      tenantId: 'YRKVVJQ426W8Y3Q4_TST',
-      secret: 'ae25ccf025d6460dbe449ddd72747c75',
-      baseUrl: 'https://ecomrestapi-use1.ecom.inforcloudsuite.com/ecomapp',
-      clientEmail: 'ben.ray@trimarkusa.com'
+      tenantId: process.env.INFOR_TENANT_ID_TST,
+      secret: process.env.INFOR_ECOMM_ENRICHMENT_SECRET,
+      baseUrl: process.env.INFOR_ENRICHMENT_BASE_URL,
+      clientEmail: process.env.INFOR__ENRICHMENT_CLIENT_EMAIL
     };
 
     const response = await makeInforRequest({
