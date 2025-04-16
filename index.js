@@ -9,6 +9,7 @@ const { makeInforRequest } = require('./inforApiClient');
 const handleXmlFromFile = require('./utils/handleXmlFromFile');
 const handleProductImageUpdate = require('./utils/products/handleProductImageUpdate');
 const handleCatalogCreate = require('./utils/taxonomy/handleCatalogCreate');
+const handleCategoryItems = require('./utils/taxonomy/handleCategoryItems');
 const handleAttributeUpdate = require('./utils/handleAttributeUpdate');
 const handleWebCategoryUpdate = require('./utils/handleWebCatagoryUpdate');
 const handleProductAttributeUpdate = require('./utils/products/handleProductAttributeUpdate')
@@ -203,6 +204,24 @@ app.get('/process/productresources/fetch', async (req, res) => {
 
 /* TAXONOMY */
 
+/* create catalog category items (products) */
+app.get('/process/categories/create', async (req, res) => {
+  try {
+    const filePath = path.join(__dirname, 'uploads', 'ProductsEcommerce/Products-2025-04-02_20.22.08.xml');
+    const itemJson = await handleXmlFromFile(filePath, 'Products', true);
+
+
+console.log(itemJson);
+
+    const productAttributeRequestBodies = handleCategoryItems(itemJson?.Classifications);
+    res.json(productAttributeRequestBodies);
+  } catch (error) {
+    console.error('Error processing product image update:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+
 /* create catalog */
 app.get('/process/catalog/create', async (req, res) => {
   try {
@@ -210,7 +229,7 @@ app.get('/process/catalog/create', async (req, res) => {
     const itemJson = await handleXmlFromFile(filePath, 'CatalogData', true);
     const payloadType = "Created";
     const catalogRequestBodies = handleCatalogCreate(itemJson, payloadType);
-    res.json(catalogRequestBodies);
+    //res.json(catalogRequestBodies);
 
 
   } catch (error) {
@@ -226,7 +245,7 @@ app.get('/process/catalog/update', async (req, res) => {
     const itemJson = await handleXmlFromFile(filePath, 'CatalogData', true);
     const payloadType = "Updated";
     const catalogRequestBodies = handleCatalogCreate(itemJson, payloadType);
-    res.json(catalogRequestBodies);
+    //res.json(catalogRequestBodies);
 
 
   } catch (error) {
@@ -242,7 +261,7 @@ app.get('/process/catalog/delete', async (req, res) => {
     const itemJson = await handleXmlFromFile(filePath, 'CatalogData', true);
     const payloadType = "Deleted";
     const catalogRequestBodies = handleCatalogCreate(itemJson, payloadType);
-    res.json(catalogRequestBodies);
+    //res.json(catalogRequestBodies);
 
 
   } catch (error) {
