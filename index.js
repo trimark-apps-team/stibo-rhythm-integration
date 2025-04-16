@@ -1,5 +1,6 @@
 // Required modules
 const express = require('express');
+const axios = require('axios');
 const path = require('path');
 const livereload = require('livereload');
 const connectLivereload = require('connect-livereload');
@@ -24,6 +25,7 @@ let useAutoRefresh = false;
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
+
 
 // Check for the query parameter to enable auto-refresh
 app.use((req, res, next) => {
@@ -60,6 +62,10 @@ app.get('/process/attributes', async (req, res) => {
   const jsonData = await handleXmlFromFile(filePath, 'Attributes', true);
   res.json(jsonData);
 });
+
+
+
+
 
 app.get('/process/webclassification', async (req, res) => {
   const filePath = path.join(__dirname, 'uploads', 'WebClassification/WebHierarchy-Catalog-2025-04-03_13.26.20.xml');
@@ -146,7 +152,7 @@ app.get('/process/productresources/fetch', async (req, res) => {
       tenantId: 'YRKVVJQ426W8Y3Q4_TST',
       secret: 'ae25ccf025d6460dbe449ddd72747c75',
       baseUrl: 'https://ecomrestapi-use1.ecom.inforcloudsuite.com/ecomapp',
-      clientEmail: 'wayne.liu@infor.com'
+      clientEmail: 'ben.ray@trimarkusa.com'
     };
 
     const response = await makeInforRequest({
