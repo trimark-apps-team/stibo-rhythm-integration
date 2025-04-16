@@ -1,4 +1,5 @@
 // Required modules
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const livereload = require('livereload');
@@ -24,6 +25,17 @@ let useAutoRefresh = false;
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
+
+
+// const https = require('https');
+
+// const agent = new https.Agent({ rejectUnauthorized: false });
+
+// https.get('https://api.ipify.org', { agent }, res => {
+//   res.on('data', d => {
+//     console.log('App Outbound IP:', d.toString());
+//   });
+// });
 
 // Check for the query parameter to enable auto-refresh
 app.use((req, res, next) => {
@@ -134,6 +146,18 @@ app.get('/process/productattributes/update', async (req, res) => {
   }
 });
 
+app.get('/process/productattributes/update', async (req, res) => {
+  try {
+    const filePath = path.join(__dirname, 'uploads', 'ProductsEcommerce/Products-2025-04-02_20.22.08.xml');
+    const itemJson = await handleXmlFromFile(filePath, 'ProductData', true);
+    const productAttributeRequestBodies = handleProductAttributeUpdate(itemJson);
+    res.json(productAttributeRequestBodies);
+  } catch (error) {
+    console.error('Error processing product image update:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
 app.get('/process/productresources/fetch', async (req, res) => {
   try {
     const itemNumber = req.query.itemNumber; // Pass item number as query param ?itemNumber=12345
@@ -143,10 +167,10 @@ app.get('/process/productresources/fetch', async (req, res) => {
     }
 
     const config = {
-      tenantId: 'YRKVVJQ426W8Y3Q4_TST',
-      secret: 'ae25ccf025d6460dbe449ddd72747c75',
-      baseUrl: 'https://ecomrestapi-use1.ecom.inforcloudsuite.com/ecomapp',
-      clientEmail: 'wayne.liu@infor.com'
+      tenantId: process.env.INFOR_TENANT_ID_TST,
+      secret: process.env.INFOR_ECOMM_ENRICHMENT_SECRET,
+      baseUrl: process.env.INFOR_ENRICHMENT_BASE_URL,
+      clientEmail: process.env.INFOR__ENRICHMENT_CLIENT_EMAIL
     };
 
     const response = await makeInforRequest({

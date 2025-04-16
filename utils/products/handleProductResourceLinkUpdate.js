@@ -41,7 +41,7 @@ function handleProductResourceLinkUpdate(itemJson) {
         return {
             ...resource,
             resourcePayload: {
-                description: '', // not required leave blank?
+                description: path.basename(resource.resourceurl),
                 fileName: resource.resourceurl,
                 languages:[
                     {
