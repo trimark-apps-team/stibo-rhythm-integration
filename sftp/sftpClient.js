@@ -1,14 +1,7 @@
+// sftp/sftpClient.js
 const SftpClient = require('ssh2-sftp-client');
-const getSftpConfig = require('./getSftpConfig');
+const getSftpConfig = require('./utils/getSftpConfig');
 
-/**
- * Connects to an SFTP server using environment-based config
- * and runs the provided async operation with the connected client.
- * 
- * @param {string} env - The environment key (e.g., 'dev', 'prod')
- * @param {(client: SftpClient) => Promise<any>} operation
- * @returns {Promise<any>}
- */
 async function withSftp(env, operation) {
   const sftp = new SftpClient();
   const config = getSftpConfig(env);
@@ -26,20 +19,29 @@ async function withSftp(env, operation) {
 }
 
 /**
- * Downloads a file from a remote SFTP server.
- * 
+ * Connects to the SFTP server and logs detailed server info.
+ *
  * @param {string} env - Environment key (e.g., 'dev', 'prod')
- * @param {string} remotePath - Path to file on SFTP server
- * @param {string} localPath - Path to save file locally
  * @returns {Promise<void>}
  */
-async function downloadFile(env, remotePath, localPath) {
+async function testSftpConnection(env) {
   return withSftp(env, async (client) => {
-    return client.fastGet(remotePath, localPath);
+    console.log(`✅ Connected to SFTP server [${env}]`);
+
+    const cwd = await client.cwd();
+    console.log(`📁 Current working directory: ${cwd}`);
+
+    const list = await client.list(cwd);
+    console.log(`📂 Files and directories in ${cwd}:`);
+    list.forEach(item => {
+      console.log(`  - ${item.name} (${item.type === 'd' ? 'directory' : 'file'})`);
+    });
+
+    console.log(`🔗 Server connection ready:`, client.remotePath ? client.remotePath : '[no remotePath exposed]');
   });
 }
 
 module.exports = {
   withSftp,
-  downloadFile,
+  testSftpConnection,
 };

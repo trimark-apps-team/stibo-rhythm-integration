@@ -6,6 +6,7 @@ const path = require('path');
 const livereload = require('livereload');
 const connectLivereload = require('connect-livereload');
 const { makeInforRequest } = require('./infor/inforAPIClient');
+const { testSftpConnection } = require('./sftp/sftpClient');
 
 const handleXmlFromFile = require('./utils/handleXmlFromFile');
 const handleProductImageUpdate = require('./utils/products/handleProductImageUpdate');
@@ -29,6 +30,8 @@ app.get('/', (req, res) => {
 });
 
 
+
+//get express application ip address
 // const https = require('https');
 
 // const agent = new https.Agent({ rejectUnauthorized: false });
@@ -38,6 +41,10 @@ app.get('/', (req, res) => {
 //     console.log('App Outbound IP:', d.toString());
 //   });
 // });
+
+
+
+
 
 // Check for the query parameter to enable auto-refresh
 app.use((req, res, next) => {
@@ -61,6 +68,19 @@ if (useAutoRefresh) {
 
 // Static files
 app.use(express.static('public'));
+
+
+//GET /test-sftp?env=dev
+app.get('/test-sftp', async (req, res) => {
+  const { env = 'dev' } = req.query;
+
+  try {
+    await testSftpConnection(env);
+    res.send(`✅ Successfully connected to ${env} SFTP server`);
+  } catch (err) {
+    res.status(500).send(`❌ Failed to connect: ${err.message}`);
+  }
+});
 
 // --- API ROUTES ---
 app.get('/process/products', async (req, res) => {
