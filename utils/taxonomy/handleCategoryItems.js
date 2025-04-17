@@ -1,83 +1,85 @@
-function handleCategoryItems({ data }, payloadType = 'Created') {
-    const rootClassification = data?.Classification?.Rhythm?.Classification;
-  
-   // console.log(rootClassification);
+const fs = require('fs');
+const { DOMParser } = require('xmldom');
 
-
-    if (!rootClassification) {
-      throw new Error('No classification data found under STEP-ProductInformation > Classifications.');
-    }
-  
-    const categoryPayloads = [];
-  
-    // ⬇️ Flatten all nested WebCat_* entries and keep full details
-    function flattenClassifications(classifications) {
-      const flatList = [];
-  
-      function recurse(node) {
-        if (!node || typeof node !== 'object') return;
-  
-        const classificationList = Array.isArray(node)
-          ? node
-          : Object.values(node); // Extract all WebCat_* objects
-  
-        classificationList.forEach(classification => {
-          flatList.push(classification); // ✅ Keep full structure (ID, Name, MetaData, etc.)
-          if (classification?.Classification) {
-            recurse(classification.Classification);
-          }
-        });
-      }
-  
-      recurse(classifications);
-      return flatList;
-    }
-  
-    const allCategories = flattenClassifications(rootClassification);
-  
-
-
-    // 🛠️ Build a payload for each flat category that has items
-    allCategories.forEach(classification => {
-      let categoryKey = null;
-      let linkedItems = [];
-  //console.log(classification);
-      const metadata = classification?.MetaData?.Value;
-      const values = Array.isArray(metadata) ? metadata : [metadata];
-  
-      values.forEach(val => {
-        const attrId = val?.$?.AttributeID || val?.AttributeID;
-        const rawVal = val?._ || val?.['#text'] || val;
-  
-        if (attrId === 'PMDM.AT.WebHierarchyKey') {
-          categoryKey = rawVal?.trim();
+// Function to handle XML file reading and transformation
+async function handleCategoryItems(filePath, outputName, shouldPrint = false) {
+    try {
+        const xmlString = fs.readFileSync(filePath, 'utf-8');
+        const itemJson = parseXmlToWebsiteCategories(xmlString);
+   
+        if (shouldPrint) {
+            console.log(`${outputName}:`, JSON.stringify(itemJson, null, 2));
         }
+
+        return itemJson;
+    } catch (error) {
+        console.error("Error reading or processing XML file:", error);
+        throw error;
+    }
+}
+
+// Function to parse the XML and return the desired format
+function parseXmlToWebsiteCategories(xmlString) {
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString(xmlString, "application/xml");
   
-        if (attrId === 'PMDM.AT.LinkedGoldenRecords' && typeof rawVal === 'string') {
-          linkedItems = rawVal.split(',').map(item => item.trim());
-        }
-      });
-  
-      if (categoryKey && linkedItems.length) {
-        categoryPayloads.push({
-          context: 'catalogs::categories::items',
-          data: {
-            items: linkedItems,
-            key: categoryKey,
-            recipientEmails: ['xxx@yyy.com'],
-          },
-          dataFormatVersion: 0,
-          dataId: 'dataId',
-          groupId: 'groupId',
-          notes: 'notes',
-          source: 'source',
-          type: payloadType,
-        });
-      }
+
+    const categories = [];
+    const seenClassificationIds = new Set();
+
+    const classifications = xmlDoc.getElementsByTagName("Classification");
+
+    Array.from(classifications).forEach(classification => {
+        const userTypeID = classification.getAttribute("UserTypeID");
+        if (userTypeID !== "PMDM.CLS.WebsiteCategory") return;
+
+        const classificationId = classification.getAttribute("ID");
+        if (seenClassificationIds.has(classificationId)) return;
+        seenClassificationIds.add(classificationId);
+
+        // Only check direct MetaData children of the Classification
+        const metaDataNode = Array.from(classification.childNodes).find(
+            node => node.nodeName === "MetaData"
+        );
+
+        if (!metaDataNode) return;
+
+        const valueNodes = Array.from(metaDataNode.getElementsByTagName("Value"));
+        const linkedGoldenRecordsNode = valueNodes.find(
+            valueNode => valueNode.getAttribute("AttributeID") === "PMDM.AT.LinkedGoldenRecords"
+        );
+
+        if (!linkedGoldenRecordsNode) return;
+
+        const linkedGoldenRecords = linkedGoldenRecordsNode.textContent
+            .split(',')
+            .map(s => s.trim())
+            .filter(Boolean);
+
+        const keyNode = valueNodes.find(
+            valueNode => valueNode.getAttribute("AttributeID") === "PMDM.AT.WebHierarchyKey"
+        );
+        const key = keyNode ? keyNode.textContent : "";
+
+        const categoryData = {
+            context: "catalogs::categories::items",
+            data: {
+                items: linkedGoldenRecords,
+                key: key,
+                recipientEmails: ["xxx@yyy.com"]
+            },
+            dataFormatVersion: 0,
+            dataId: classificationId,
+            groupId: "groupId",
+            notes: "notes",
+            source: "source",
+            type: "Created"
+        };
+
+        categories.push(categoryData);
     });
-  
-    return categoryPayloads;
-  }
-  
-  module.exports = handleCategoryItems;
-  
+
+    return categories;
+}
+
+module.exports = handleCategoryItems;
