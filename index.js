@@ -10,7 +10,7 @@ const { testSftpConnection } = require('./sftp/sftpClient');
 
 const handleXmlFromFile = require('./utils/handleXmlFromFile');
 const handleProductImageUpdate = require('./utils/products/handleProductImageUpdate');
-const handleCatalogCreate = require('./utils/taxonomy/handleCatalogCreate');
+const handleCatalogCreate = require('./utils/taxonomy/handleCatalog');
 const handleCategoryItems = require('./utils/taxonomy/handleCategoryItems');
 const handleAttributeUpdate = require('./utils/handleAttributeUpdate');
 const handleWebCategoryUpdate = require('./utils/handleWebCatagoryUpdate');
@@ -42,7 +42,7 @@ app.get('/', (req, res) => {
 //   });
 // });
 
-const useAutoRefresh = false;
+let useAutoRefresh = false;
 
 // Check for the query parameter to enable auto-refresh
 app.use((req, res, next) => {
@@ -227,16 +227,48 @@ app.get('/process/productresources/fetch', async (req, res) => {
   }
 });
 
-/* TAXONOMY */
-
+/* PRODUCT TAXONOMY */
 /* create catalog category items (products) */
 app.get('/process/categories/create', async (req, res) => {
   try {
     const filePath = path.join(__dirname, 'uploads', 'ProductsEcommerce/Products-2025-04-02_20.22.08.xml');
     //const fileJson = await handleXmlFromFile(filePath, 'CategoryItems', true);
-  
+    const payloadType = "Created";
     // Call the function to handle the XML file processing
-    const itemJson = await handleCategoryItems(filePath, 'CategoryItems', true);
+    const itemJson = await handleCategoryItems(filePath, 'CategoryItems', payloadType);
+    //const productAttributeRequestBodies = handleCategoryItems(itemJson);
+    res.json(itemJson);
+  } catch (error) {
+    console.error('Error processing product image update:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+/* update catalog category items (products) */
+app.get('/process/categories/update', async (req, res) => {
+  try {
+    const filePath = path.join(__dirname, 'uploads', 'ProductsEcommerce/Products-2025-04-02_20.22.08.xml');
+    //const fileJson = await handleXmlFromFile(filePath, 'CategoryItems', true);
+    const payloadType = "Updated";
+    // Call the function to handle the XML file processing
+    const itemJson = await handleCategoryItems(filePath, 'CategoryItems', payloadType);
+    //const productAttributeRequestBodies = handleCategoryItems(itemJson);
+    res.json(itemJson);
+  } catch (error) {
+    console.error('Error processing product image update:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+
+/* delete catalog category items (products) */
+app.get('/process/categories/delete', async (req, res) => {
+  try {
+    const filePath = path.join(__dirname, 'uploads', 'ProductsEcommerce/Products-2025-04-02_20.22.08.xml');
+    //const fileJson = await handleXmlFromFile(filePath, 'CategoryItems', true);
+    const payloadType = "Deleted";
+    // Call the function to handle the XML file processing
+    const itemJson = await handleCategoryItems(filePath, 'CategoryItems', payloadType);
     //const productAttributeRequestBodies = handleCategoryItems(itemJson);
     res.json(itemJson);
   } catch (error) {

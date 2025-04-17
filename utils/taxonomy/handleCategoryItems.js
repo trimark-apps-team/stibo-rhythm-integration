@@ -2,15 +2,11 @@ const fs = require('fs');
 const { DOMParser } = require('xmldom');
 
 // Function to handle XML file reading and transformation
-async function handleCategoryItems(filePath, outputName, shouldPrint = false) {
+async function handleCategoryItems(filePath, outputName, payloadType) {
     try {
         const xmlString = fs.readFileSync(filePath, 'utf-8');
-        const itemJson = parseXmlToWebsiteCategories(xmlString);
+        const itemJson = parseXmlToWebsiteCategories(xmlString, payloadType);
    
-        if (shouldPrint) {
-            console.log(`${outputName}:`, JSON.stringify(itemJson, null, 2));
-        }
-
         return itemJson;
     } catch (error) {
         console.error("Error reading or processing XML file:", error);
@@ -19,7 +15,7 @@ async function handleCategoryItems(filePath, outputName, shouldPrint = false) {
 }
 
 // Function to parse the XML and return the desired format
-function parseXmlToWebsiteCategories(xmlString) {
+function parseXmlToWebsiteCategories(xmlString, payloadType) {
     const parser = new DOMParser();
     const xmlDoc = parser.parseFromString(xmlString, "application/xml");
   
@@ -73,7 +69,7 @@ function parseXmlToWebsiteCategories(xmlString) {
             groupId: "groupId",
             notes: "notes",
             source: "source",
-            type: "Created"
+            type: payloadType
         };
 
         categories.push(categoryData);
