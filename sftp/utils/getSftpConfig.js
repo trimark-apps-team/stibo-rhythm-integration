@@ -1,20 +1,18 @@
 const fs = require('fs');
 const path = require('path');
-require('dotenv').config(); // Load .env
+require('dotenv').config(); // Load .env file
 
-function getSftpConfig(env) {
-  const prefix = env.toUpperCase(); // e.g. 'DEV' or 'PROD'
-
-  const host = process.env[`${prefix}_SFTP_HOST`];
-  const port = parseInt(process.env[`${prefix}_SFTP_PORT`] || '22', 10);
-  const username = process.env[`${prefix}_SFTP_USER`];
-  const keyPath = process.env[`${prefix}_SFTP_KEY`];
+function getSftpConfig() {
+  const host = process.env.SFTP_HOST;
+  const port = parseInt(process.env.SFTP_PORT || '22', 10);
+  const username = process.env.SFTP_USER;
+  const keyPath = process.env.SFTP_KEY;
 
   if (!host || !username || !keyPath) {
-    throw new Error(`Missing SFTP config for environment: ${env}`);
+    throw new Error('Missing SFTP configuration in .env');
   }
 
-  const privateKey = fs.readFileSync(path.resolve(__dirname, '..', keyPath));
+  const privateKey = fs.readFileSync(path.resolve(process.cwd(), keyPath));
 
   return { host, port, username, privateKey };
 }

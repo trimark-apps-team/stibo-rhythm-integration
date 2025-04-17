@@ -28,18 +28,66 @@
     a:hover {
       text-decoration: underline;
     }
+    .sftp-status {
+      background: #fff;
+      border: 1px solid #ddd;
+      padding: 1rem;
+      margin-top: 2rem;
+      border-radius: 8px;
+    }
+    .sftp-status h2 {
+      margin-top: 0;
+    }
+    .file-list {
+      margin-top: 0.5rem;
+    }
+    .file-list li {
+      font-family: monospace;
+      color: #333;
+    }
   </style>
 </head>
 <body>
   <h1>🛠 STIBO Rhythm Integration Endpoints</h1>
   <ul>
-    <li><a href="/process/products" target="_blank">🔄 Process Products</a></li>
-    <li><a href="/process/attributes" target="_blank">🔄 Process Attributes</a></li>
-    <li><a href="/process/webclassification" target="_blank">📚 Process Web Classification</a></li>
-    <li><a href="/process/attributes/update" target="_blank">🔧 Update Attributes</a></li>
-    <li><a href="/process/productimage/update" target="_blank">🖼 Update Product Image</a></li>
-    <li><a href="/process/productattributes/update" target="_blank">🔧 Update Product Attributes</a></li>
-    <li><a href="/process/productresource/update" target="_blank">🔧 Update Product Resources</a></li>
+    <li><a href="/process/products">🔄 Process Products</a></li>
+    <li><a href="/process/attributes">🔄 Process Attributes</a></li>
+    <li><a href="/process/webclassification">📚 Process Web Classification</a></li>
+    <li><a href="/process/attributes/update">🔧 Update Attributes</a></li>
+    <li><a href="/process/productimage/update">🖼 Update Product Image</a></li>
+    <li><a href="/process/productattributes/update">🔧 Update Product Attributes</a></li>
+    <li><a href="/process/productresource/update">🔧 Update Product Resources</a></li>
   </ul>
+
+  <div class="sftp-status">
+    <h2>📡 STIBO SFTP Connection Status</h2>
+    <p id="sftp-status-msg">Checking SFTP connection...</p>
+    <p><strong>Working Directory:</strong> <span id="cwd"></span></p>
+    <ul class="file-list" id="file-list"></ul>
+  </div>
+
+  <script>
+    fetch('/sftp-status')
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('sftp-status-msg').textContent = data.message || '✅ Connected';
+        document.getElementById('cwd').textContent = data.cwd || 'N/A';
+
+        const fileList = document.getElementById('file-list');
+        fileList.innerHTML = '';
+
+        if (Array.isArray(data.files)) {
+          data.files.forEach(file => {
+            const li = document.createElement('li');
+            li.textContent = `${file.name} (${file.type})`;
+            fileList.appendChild(li);
+          });
+        }
+      })
+      .catch(err => {
+        document.getElementById('sftp-status-msg').textContent = '❌ Failed to connect to SFTP';
+        console.error(err);
+      });
+  </script>
 </body>
 </html>
