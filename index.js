@@ -10,6 +10,7 @@ const { testSftpConnection } = require('./sftp/sftpClient');
 
 const handleXmlFromFile = require('./utils/handleXmlFromFile');
 const handleProductImageUpdate = require('./utils/products/handleProductImageUpdate');
+const handleCategories = require('./utils/taxonomy/handleCategories');
 const handleCatalogCreate = require('./utils/taxonomy/handleCatalog');
 const handleCategoryItems = require('./utils/taxonomy/handleCategoryItems');
 const handleAttributeUpdate = require('./utils/handleAttributeUpdate');
@@ -228,8 +229,38 @@ app.get('/process/productresources/fetch', async (req, res) => {
 });
 
 /* PRODUCT TAXONOMY */
-/* create catalog category items (products) */
+/* create categories */
 app.get('/process/categories/create', async (req, res) => {
+  const filePath = path.join(__dirname, 'uploads', 'WebClassification/WebHierarchy-Catalog-2025-04-03_13.26.20.xml');
+  const categoryJson = await handleXmlFromFile(filePath, 'Categories', true);
+  
+  const payloadType = "Created";
+  const categoryRequestBodies = handleCategories(categoryJson, payloadType);
+  res.json(categoryRequestBodies);
+});
+
+/* update categories */
+app.get('/process/categories/update', async (req, res) => {
+  const filePath = path.join(__dirname, 'uploads', 'WebClassification/WebHierarchy-Catalog-2025-04-03_13.26.20.xml');
+  const categoryJson = await handleXmlFromFile(filePath, 'Categories', true);
+  
+  const payloadType = "Updated";
+  const categoryRequestBodies = handleCategories(categoryJson, payloadType);
+  res.json(categoryRequestBodies);
+});
+
+/* delete categories */
+app.get('/process/categories/delete', async (req, res) => {
+  const filePath = path.join(__dirname, 'uploads', 'WebClassification/WebHierarchy-Catalog-2025-04-03_13.26.20.xml');
+  const categoryJson = await handleXmlFromFile(filePath, 'Categories', true);
+  
+  const payloadType = "Deleted";
+  const categoryRequestBodies = handleCategories(categoryJson, payloadType);
+  res.json(categoryRequestBodies);
+});
+
+/* create catalog category items (products) */
+app.get('/process/category-items/create', async (req, res) => {
   try {
     const filePath = path.join(__dirname, 'uploads', 'ProductsEcommerce/Products-2025-04-02_20.22.08.xml');
     //const fileJson = await handleXmlFromFile(filePath, 'CategoryItems', true);
@@ -245,7 +276,7 @@ app.get('/process/categories/create', async (req, res) => {
 });
 
 /* update catalog category items (products) */
-app.get('/process/categories/update', async (req, res) => {
+app.get('/process/category-items/update', async (req, res) => {
   try {
     const filePath = path.join(__dirname, 'uploads', 'ProductsEcommerce/Products-2025-04-02_20.22.08.xml');
     //const fileJson = await handleXmlFromFile(filePath, 'CategoryItems', true);
@@ -262,7 +293,7 @@ app.get('/process/categories/update', async (req, res) => {
 
 
 /* delete catalog category items (products) */
-app.get('/process/categories/delete', async (req, res) => {
+app.get('/process/category-items/delete', async (req, res) => {
   try {
     const filePath = path.join(__dirname, 'uploads', 'ProductsEcommerce/Products-2025-04-02_20.22.08.xml');
     //const fileJson = await handleXmlFromFile(filePath, 'CategoryItems', true);
