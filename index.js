@@ -42,9 +42,7 @@ app.get('/', (req, res) => {
 //   });
 // });
 
-
-
-
+const useAutoRefresh = false;
 
 // Check for the query parameter to enable auto-refresh
 app.use((req, res, next) => {
