@@ -3,10 +3,10 @@ require('dotenv').config();
 const express = require('express');
 const axios = require('axios');
 const path = require('path');
-const livereload = require('livereload');
-const connectLivereload = require('connect-livereload');
 const { makeInforRequest } = require('./infor/inforAPIClient');
 const { testSftpConnection } = require('./sftp/sftpClient');
+const getLatestUploadedFile = require('./utils/uploads/getLatestUploadedFile')
+const https = require('https');
 
 const handleXmlFromFile = require('./utils/handleXmlFromFile');
 const handleProductImageUpdate = require('./utils/products/handleProductImageUpdate');
@@ -21,86 +21,43 @@ const handleProductResourceLinkUpdate = require('./utils/products/handleProductR
 const app = express();
 const port = 3000;
 
-// Default flag to enable/disable auto-refresh
-let useAutoRefresh = false;
-
-// --- ROUTES ---
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
-
-
 //get express application ip address
-// const https = require('https');
+const agent = new https.Agent({ rejectUnauthorized: false });
 
-// const agent = new https.Agent({ rejectUnauthorized: false });
-
-// https.get('https://api.ipify.org', { agent }, res => {
-//   res.on('data', d => {
-//     console.log('App Outbound IP:', d.toString());
-//   });
-// });
-
-
-
-
-
-// Check for the query parameter to enable auto-refresh
-app.use((req, res, next) => {
-  useAutoRefresh = req.query['auto-refresh'] === 'true';  // Set auto-refresh based on the query parameter
-  next();
-});
-
-// --- LiveReload Setup (conditionally enabled) ---
-if (useAutoRefresh) {
-  const liveReloadServer = livereload.createServer();
-  liveReloadServer.watch(path.join(__dirname, 'public'));
-  app.use(connectLivereload());
-
-  // Trigger browser reload on file changes
-  liveReloadServer.server.once('connection', () => {
-    setTimeout(() => {
-      liveReloadServer.refresh('/');
-    }, 100);
+https.get('https://api.ipify.org', { agent }, res => {
+  res.on('data', d => {
+    console.log('App Outbound IP:', d.toString());
   });
-}
+});
 
 // Static files
 app.use(express.static('public'));
 
 
-//GET /test-sftp?env=dev
-app.get('/test-sftp', async (req, res) => {
-  const { env = 'dev' } = req.query;
-
-  try {
-    await testSftpConnection(env);
-    res.send(`✅ Successfully connected to ${env} SFTP server`);
-  } catch (err) {
-    res.status(500).send(`❌ Failed to connect: ${err.message}`);
-  }
+// --- ROUTES ---
+app.get('/', async (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+app.get('/sftp-status', async (req, res) => {
+  const result = await testSftpConnection();
+  res.json(result); // sends status + file info back to index.html
+});
 // --- API ROUTES ---
 app.get('/process/products', async (req, res) => {
-  const filePath = path.join(__dirname, 'uploads', 'ProductsEcommerce/Products-2025-04-02_20.22.08.xml');
+  const filePath = getLatestUploadedFile('ProductsEcommerce');
   const jsonData = await handleXmlFromFile(filePath, 'Products', true);
   res.json(jsonData);
 });
 
 app.get('/process/attributes', async (req, res) => {
-  const filePath = path.join(__dirname, 'uploads', 'AttributesEcommerce/Attributes-2025-01-30_13.11.10.xml');
+  const filePath = getLatestUploadedFile('AttributesEcommerce');
   const jsonData = await handleXmlFromFile(filePath, 'Attributes', true);
   res.json(jsonData);
 });
 
-
-
-
-
 app.get('/process/webclassification', async (req, res) => {
-  const filePath = path.join(__dirname, 'uploads', 'WebClassification/WebHierarchy-Catalog-2025-04-03_13.26.20.xml');
+  const filePath = getLatestUploadedFile('WebClassification');
   const webCategoryJson = await handleXmlFromFile(filePath, 'WebClassification', true);
   const webCategoryRequestBodies = handleWebCategoryUpdate(webCategoryJson);
   res.json(webCategoryRequestBodies);
@@ -108,7 +65,7 @@ app.get('/process/webclassification', async (req, res) => {
 
 app.get('/process/attributes/update', async (req, res) => {
   try {
-    const filePath = path.join(__dirname, 'uploads', 'AttributesEcommerce/Attributes-2025-01-30_13.11.10.xml');
+    const filePath = getLatestUploadedFile('AttributesEcommerce');
     const attributeJson = await handleXmlFromFile(filePath, 'AttributeData', true);
     const attributeRequestBodies = handleAttributeUpdate(attributeJson);
     res.json(attributeRequestBodies);
@@ -118,11 +75,9 @@ app.get('/process/attributes/update', async (req, res) => {
   }
 });
 
-
 app.get('/process/productresource/update', async (req, res) => {
   try {
-    const filePath = path.join(__dirname, 'uploads', 'ProductsEcommerce/Products-2025-04-02_20.22.08.xml');
-
+    const filePath = getLatestUploadedFile('ProductsEcommerce');
     const itemJson = await handleXmlFromFile(filePath, 'ProductData', true);
 
     // Wait for all resources to be prepared (downloaded, streamed, etc)
@@ -150,7 +105,7 @@ app.get('/process/productresource/update', async (req, res) => {
 
 app.get('/process/productimage/update', async (req, res) => {
   try {
-    const filePath = path.join(__dirname, 'uploads', 'ProductsEcommerce/Products-2025-04-02_20.22.08.xml');
+    const filePath = getLatestUploadedFile('ProductsEcommerce');
     const itemJson = await handleXmlFromFile(filePath, 'ProductData', true);
     const productImageRequestBodies = handleProductImageUpdate(itemJson);
     res.json(productImageRequestBodies);
@@ -162,7 +117,7 @@ app.get('/process/productimage/update', async (req, res) => {
 
 app.get('/process/productattributes/update', async (req, res) => {
   try {
-    const filePath = path.join(__dirname, 'uploads', 'ProductsEcommerce/Products-2025-04-02_20.22.08.xml');
+    const filePath = getLatestUploadedFile('ProductsEcommerce');
     const itemJson = await handleXmlFromFile(filePath, 'ProductData', true);
     const productAttributeRequestBodies = handleProductAttributeUpdate(itemJson);
     res.json(productAttributeRequestBodies);
@@ -237,7 +192,7 @@ app.get('/process/productresources/fetch', async (req, res) => {
 /* create catalog */
 app.get('/process/catalog/create', async (req, res) => {
   try {
-    const filePath = path.join(__dirname, 'uploads', 'WebClassification/WebHierarchy-Catalog-2025-04-03_13.26.20.xml');
+    const filePath = getLatestUploadedFile('WebClassification');
     const itemJson = await handleXmlFromFile(filePath, 'CatalogData', true);
     const payloadType = "Created";
     const catalogRequestBodies = handleCatalogCreate(itemJson, payloadType);
@@ -253,7 +208,7 @@ app.get('/process/catalog/create', async (req, res) => {
 /* update catalog */
 app.get('/process/catalog/update', async (req, res) => {
   try {
-    const filePath = path.join(__dirname, 'uploads', 'WebClassification/WebHierarchy-Catalog-2025-04-03_13.26.20.xml');
+    const filePath = getLatestUploadedFile('WebClassification');
     const itemJson = await handleXmlFromFile(filePath, 'CatalogData', true);
     const payloadType = "Updated";
     const catalogRequestBodies = handleCatalogCreate(itemJson, payloadType);
@@ -269,7 +224,7 @@ app.get('/process/catalog/update', async (req, res) => {
 /* delete catalog */
 app.get('/process/catalog/delete', async (req, res) => {
   try {
-    const filePath = path.join(__dirname, 'uploads', 'WebClassification/WebHierarchy-Catalog-2025-04-03_13.26.20.xml');
+    const filePath = getLatestUploadedFile('WebClassification');
     const itemJson = await handleXmlFromFile(filePath, 'CatalogData', true);
     const payloadType = "Deleted";
     const catalogRequestBodies = handleCatalogCreate(itemJson, payloadType);
@@ -286,12 +241,4 @@ app.get('/process/catalog/delete', async (req, res) => {
 // --- Start Server ---
 app.listen(port, async () => {
   console.log(`🚀 Server running at http://localhost:${port}`);
-
-  // Dynamically import 'open' because it's an ESM module
-  // try {
-  //   const { default: open } = await import('open');
-  //   open(`http://localhost:${port}`);
-  // } catch (err) {
-  //   console.error('Failed to open browser automatically:', err);
-  // }
 });

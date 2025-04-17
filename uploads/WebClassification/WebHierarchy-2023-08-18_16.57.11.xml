@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+<properties>
+<entry key="eventID">1112964</entry>
+<entry key="eventType">2</entry>
+<entry key="nodeID">WebCat_1645692</entry>
+<entry key="nodeType">Classification1</entry>
+<entry key="eventCreationTime">2023-08-18 16:56:35.0</entry>
+<entry key="eventRevision">0.3</entry>
+<entry key="messageCreationTime">2023-08-18 16:57:10.98</entry>
+</properties>
+-->
+<!-- Configuration:
+<?xml version='1.0'?>
+<STEP-ProductInformation ResolveInlineRefs="true" FollowOverrideSubProducts="true" ExportDerivedAttrs="true" Validation="XSD" ExportDeletedData="true">
+<DeleteClassifications/>
+</STEP-ProductInformation>
+Export from Dummy_TesttoDelete
+Effective date: 2023-08-18 16:57:10
+Classifications "WebCat_1645692"
+Products All
+Assets All
+
+Exported by domain exporter.
+-->
+<STEP-ProductInformation xmlns="http://www.stibosystems.com/step" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.stibosystems.com/step PIM.xsd" ExportTime="2023-08-18 16:57:10" ExportContext="Context1" ContextID="Context1" WorkspaceID="Approved" UseContextLocale="false">
+
+  <DeleteClassifications>
+    <DeleteClassification ID="WebCat_1645692"/>
+  </DeleteClassifications>
+</STEP-ProductInformation>
