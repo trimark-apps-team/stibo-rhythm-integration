@@ -24,9 +24,9 @@ function sendEvent(payload) {
             if (!token) {
                 throw new Error('No token received from auth service');
             }
-            console.log('📤 Sending event to:', constants_1.EVENT_ENDPOINT);
+            console.log('📤 Sending event to:', constants_1.EVENT_URL);
             console.log('🔐 Using token (first 40 chars):', token.slice(0, 40), '...');
-            const response = yield axios_1.default.post(constants_1.EVENT_ENDPOINT, payload, {
+            const response = yield axios_1.default.post(constants_1.EVENT_URL, payload, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     'Content-Type': 'application/json'

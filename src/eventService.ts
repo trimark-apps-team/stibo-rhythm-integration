@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { getAuthToken } from './authService';
-import { EVENT_ENDPOINT } from './constants';
+import { EVENT_URL } from './constants';
 import { EventPayload } from './types';
 
 export async function sendEvent(payload: EventPayload): Promise<any> {
@@ -11,10 +11,10 @@ export async function sendEvent(payload: EventPayload): Promise<any> {
       throw new Error('No token received from auth service');
     }
 
-    console.log('📤 Sending event to:', EVENT_ENDPOINT);
+    console.log('📤 Sending event to:', EVENT_URL);
     console.log('🔐 Using token (first 40 chars):', token.slice(0, 40), '...');
 
-    const response = await axios.post(EVENT_ENDPOINT, payload, {
+    const response = await axios.post(EVENT_URL, payload, {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json'
