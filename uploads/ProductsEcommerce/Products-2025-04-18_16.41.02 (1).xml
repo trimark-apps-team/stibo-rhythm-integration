@@ -1,0 +1,588 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+<properties>
+<entry key="eventID">6723044</entry>
+<entry key="eventType">1</entry>
+<entry key="nodeID">P-3216632</entry>
+<entry key="nodeType">product</entry>
+<entry key="eventCreationTime">2025-04-18 16:20:01.0</entry>
+<entry key="eventRevision">0.4</entry>
+<entry key="messageCreationTime">2025-04-18 16:41:02.52</entry>
+<entry key="eventID">6723056</entry>
+<entry key="eventType">1</entry>
+<entry key="nodeID">P-3306323</entry>
+<entry key="nodeType">product</entry>
+<entry key="eventCreationTime">2025-04-18 16:33:02.0</entry>
+<entry key="eventRevision">0.4</entry>
+<entry key="messageCreationTime">2025-04-18 16:41:02.52</entry>
+</properties>
+ -->
+<!--  Configuration:
+<?xml version='1.0'?>
+<STEP-ProductInformation ResolveInlineRefs="true" FollowOverrideSubProducts="true" ExportDerivedAttrs="true" ExportDeletedData="true">
+    <!-_- <IncludeKey KeyID="PMDM.Key.SKU" /> -_->
+    <!-_- <AttributeList ExportSize="Minimum"> -_->
+    <!-_-  <Attribute> -_->
+    <!-_-  <Name /> -_->
+    <!-_-  <MetaData> -_->
+    <!-_-      <Value AttributeID="PMDM.AT.DisplaySequence" /> -_->
+    <!-_-  </MetaData> -_->
+    <!-_- </Attribute> -_->
+    <!-_-  </AttributeList> -_->
+    <IncludeKey KeyID="PMDM.Key.Golden.SKU"/>
+    <!-_-<Assets ExportSize="Referenced">-_->
+    <!-_-    <Asset>-_->
+    <!-_-        <Values>-_->
+    <!-_-            <Value AttributeID="AssetDownload.AssetURLAttribute"/>-_->
+    <!-_-        </Values>-_->
+    <!-_-    </Asset> -_->
+    <!-_-   </Assets>-_->
+    <Classifications ExportSize="Referenced">
+        <FilterUserType ID="PMDM.CLS.Website"/>
+        <FilterUserType ID="PMDM.CLS.WebsiteCategory"/>
+        <Classification IncludeParent="true" />
+    </Classifications>
+    <!-_- Product Data-_->
+    <Products>
+        <Product>
+            <Name/>
+            <!-_- Product References-_->
+            <ProductCrossReference IncludeInherited="true" Type="PMDM.PRT.CrossSell_GR"/>
+            <ProductCrossReference IncludeInherited="true" Type="PMDM.PRT.OptionalAccessory_GR"/>
+            <ProductCrossReference IncludeInherited="true" Type="PMDM.PRT.Replacement_GR"/>
+            <ProductCrossReference IncludeInherited="true" Type="PMDM.PRT.RequiredAccessory_GR"/>
+            <ProductCrossReference IncludeInherited="true" Type="PMDM.PRT.SubstitutionAlternate_GR"/>
+            <ProductCrossReference IncludeInherited="true" Type="PMDM.PRT.UpSell_GR"/>
+            <ProductCrossReference IncludeInherited="true" Type="PMDM.PRT.GR2MP"/>
+            <!-_- Assets References-_->
+            <AssetCrossReference IncludeInherited="true">
+                <Asset Referenced="true" Embedded="true">
+                    <Values>
+                        <Value AttributeID="AssetDownload.AssetURLAttribute"/>
+                        <Value AttributeID="asset.mime-type"/>
+                    </Values>
+                </Asset>
+            </AssetCrossReference>
+            <!-_- Classifications References-_->
+            <ClassificationReference IncludeInherited="true" Type="PMDM.P2CLT.WebsiteLink" />
+            <!-_- Delete References -_->
+            <DeleteProductCrossReference/>
+            <DeleteClassificationReference/>
+            <DeleteAssetCrossReference/>
+            <!-_- Variant Data-_->
+            <Values IncludeInherited="true">
+                <Value AttributeID="PMDM.ATG.CategorySpecificAttributes" />
+                <Value AttributeID="PMDM.ATG.EcommerceProductOutbound" />
+      
+            </Values>
+            <AttributeLink IncludeInherited="true">
+                <MetaData>
+                    <Value AttributeID="PMDM.AT.DisplaySequence"/>
+                </MetaData>
+                <ValueFilter/>
+            </AttributeLink>
+        </Product>
+    </Products>
+</STEP-ProductInformation>
+Export from WINE GLASS-8.5 OZ. 12 EA./CS.
+Effective date: 2025-04-18 16:41:02
+Classifications All
+Products "P-3216632" "P-3306323"
+Assets All
+
+Exported by domain exporter.
+ -->
+<STEP-ProductInformation ExportTime="2025-04-18 16:41:02" ExportContext="Context1" ContextID="Context1" WorkspaceID="Approved" UseContextLocale="false">
+
+  <Classifications>
+    <Classification ID="Rhythm" UserTypeID="PMDM.CLS.Website" ParentID="WebHierarchyRoot" Selected="false">
+      <Name>TriMarketPlace</Name>
+      <AttributeLink AttributeID="PMDM.AT.StartDateTime"/>
+      <AttributeLink AttributeID="PMDM.AT.LinkedGoldenRecords"/>
+      <AttributeLink AttributeID="PMDM.AT.EndDateTime"/>
+      <AttributeLink AttributeID="PMDM.AT.InforStatus"/>
+      <MetaData>
+        <Value AttributeID="PMDM.AT.StartDateTime">2023-10-04 13:54:23</Value>
+        <Value AttributeID="PMDM.AT.EndDateTime">2030-10-04 13:54:21</Value>
+      </MetaData>
+      <Classification ID="WebCat_269816" UserTypeID="PMDM.CLS.WebsiteCategory" Selected="false">
+        <Name>Tabletop</Name>
+        <AttributeLink AttributeID="PMDM.AT.OverallHeight"/>
+        <MetaData>
+          <Value AttributeID="PMDM.AT.InforStatus">Updated</Value>
+          <Value AttributeID="PMDM.AT.WebHierarchyKey">Tabletop</Value>
+          <Value AttributeID="PMDM.AT.RhythmInternalName" Derived="true">TRMK_TriMarketPlace_Tabletop</Value>
+        </MetaData>
+        <Classification ID="WebCat_271112" UserTypeID="PMDM.CLS.WebsiteCategory" Selected="false">
+          <Name>Glassware</Name>
+          <MetaData>
+            <Value AttributeID="PMDM.AT.InforStatus">Updated</Value>
+            <Value AttributeID="PMDM.AT.WebHierarchyKey">Tabletop_Glassware</Value>
+            <Value AttributeID="PMDM.AT.LinkedGoldenRecords" Derived="true">10096396</Value>
+            <Value AttributeID="PMDM.AT.RhythmInternalName" Derived="true">TRMK_TriMarketPlace_Tabletop_Glassware</Value>
+          </MetaData>
+          <Classification ID="WebCat_272824" UserTypeID="PMDM.CLS.WebsiteCategory" Selected="false" Referenced="true">
+            <Name>Liquor Glasses</Name>
+            <MetaData>
+              <Value AttributeID="PMDM.AT.InforStatus">Updated</Value>
+              <Value AttributeID="PMDM.AT.WebHierarchyKey">Tabletop_Glassware_Liquor Glasses</Value>
+              <Value AttributeID="PMDM.AT.LinkedGoldenRecords" Derived="true">10007490,10011921,10019686,10027934,10028366,10028695,10043081,10044014,10047038,10054416,10054502,10059129,10059975,10060176,10066734,10067060,10067237,10068128,10081852,10003655DV1,10087705,10089290,10089759,10089803,10090492,10090491,10092125,10092126,10093854,10094362,10096636,10096932,10098200,10098452,10098802,10099265,10099556,10099558,10099728,10099799,10099673</Value>
+              <Value AttributeID="PMDM.AT.RhythmInternalName" Derived="true">TRMK_TriMarketPlace_Tabletop_Glassware_Liquor Glasses</Value>
+            </MetaData>
+          </Classification>
+          <Classification ID="WebCat_272826" UserTypeID="PMDM.CLS.WebsiteCategory" Selected="false" Referenced="true">
+            <Name>Wine &amp; Champagne Glasses</Name>
+            <MetaData>
+              <Value AttributeID="PMDM.AT.InforStatus">Updated</Value>
+              <Value AttributeID="PMDM.AT.WebHierarchyKey">Tabletop_Glassware_Wine &amp; Champagne Glasses</Value>
+              <Value AttributeID="PMDM.AT.LinkedGoldenRecords" Derived="true">10002626,10003285,10004307,10004364,10004428,10005424,10005426,10005428,10005570,10005581,10006268,10006973,10006974,10006964,10007315,10007465,10009118,10009526,10009810,10010026,10010574,10012500,10012640,10013004,10013336,10015048,10015066,10015064,10015373,10015399,10015398,10015452,10015973,10016808,10017321,10017674,10017900,10018167,10018105,10018806,10018868,10018869,10018870,10018863,10019562,10019561,10020291,10020450,10020356,10021737,10021786,10023578,10026830,10026970,10026894,10026819,10027080,10027069,10027092,10026987,10027000,10027022,10027135,10027145,10027146,10027053,10028147,10028231,10028225,10028226,10028340,10028157,10028180,10028174,10028978,10028979,10028977,10028980,10028992,10028994,10028995,10028985,10028983,10028989,10029002,10029003,10029005,10028997,10029001,10029012,10029463,10030372,10030634,10031669,10031668,10031671,10031667,10031666,10032112,10033045,10032996,10033344,10033599,10033671,10035485,10036571,10036579,10036889,10038801,10038966,10041978,10042491,10042486,10042497,10042775,10042793,10042787,10042865,10042938,10042866,10043150,10043209,10043697,10043722,10043827,10045007,10045717,10046596,10048377,10048663,10049893,10050861,10051625,10052092,10054505,10054503,10056093,10057190,10059030,10059360,10060096,10060176,10060325,10062324,10062983,10063228,10064065,10064070,10064384,10064385,10066265,10067913,10068401,10071530,10071856,10072250,10072445,10073947,10074332,10074324,10074318,10074368,10074398,10074412,10074415,10074440,10074439,10081459,10081856,10042887DV1,10064385DV1,10068401DV1,10017321DV1,10087368,10087710,10087718,10087722,10087719,10087721,10087720,10087712,10078898,10080591,10088627,10088783,10088782,10088850,10090261,10090257,10091092,10091317,10084127,10091610,10091599,10091598,10092585,10092576,10093039,10093853,10094257,10095743,10095798,10095800,10095809,10095810,10096395,10096396,10096735,10096736,10096737,10096995,10097340,10097383,10097421,10097924,10098447,10098450,10099261,10099294,10099484,10099440,10099441,10099287,10099783,10099639</Value>
+              <Value AttributeID="PMDM.AT.RhythmInternalName" Derived="true">TRMK_TriMarketPlace_Tabletop_Glassware_Wine &amp; Champagne Glasses</Value>
+            </MetaData>
+          </Classification>
+        </Classification>
+        <Classification ID="WebCat_271114" UserTypeID="PMDM.CLS.WebsiteCategory" Selected="false">
+          <Name>Tabletop Condiment Dispensers</Name>
+          <MetaData>
+            <Value AttributeID="PMDM.AT.InforStatus">Updated</Value>
+            <Value AttributeID="PMDM.AT.WebHierarchyKey">Tabletop_Tabletop Condiment Dispensers</Value>
+            <Value AttributeID="PMDM.AT.RhythmInternalName" Derived="true">TRMK_TriMarketPlace_Tabletop_Tabletop Condiment Dispensers</Value>
+          </MetaData>
+          <Classification ID="WebCat_6065759" UserTypeID="PMDM.CLS.WebsiteCategory" Selected="false" Referenced="true">
+            <Name>Squeeze Bottles</Name>
+            <MetaData>
+              <Value AttributeID="PMDM.AT.InforStatus">Updated</Value>
+              <Value AttributeID="PMDM.AT.WebHierarchyKey">Tabletop_Tabletop Condiment Dispensers_Squeeze Bottles</Value>
+              <Value AttributeID="PMDM.AT.LinkedGoldenRecords" Derived="true">10002014,10003329,10003175,10004424,10005202,10005420,10006020,10012224,10012664,10012986,10014195,10015097,10015567,10015569,10015568,10015573,10017133,10017137,10017135,10017142,10017139,10017140,10017141,10019362,10019838,10019840,10019851,10019852,10019849,10019850,10019841,10019847,10019848,10019845,10020726,10021969,10022984,10024000,10024210,10026043,10026537,10026536,10030658,10030731,10030733,10031343,10031346,10031349,10031350,10034984,10036252,10036251,10036600,10037566,10037567,10040984,10040985,10046537,10046536,10046540,10046538,10046539,10046575,10047085,10052981,10054573,10059035,10059712,10060283,10060266,10060268,10060970,10060972,10060969,10062405,10063158,10063227,10063807,10063822,10063916,10064117,10064570,10064929,10065261,10065973,10066693,10067112,10067113,10067106,10068190,10068300,10068306,10068606,10068704,10069606,10069605,10070782,10071180,10071915,10071984,10072331,10072528,10073398,10073397,10073399,10073391,10073394,10073388,10074472,10057948,10057947,10057949,10020253,10060266DV2,10060268DV3,10060268DV1,10060268DV2,10060266DV1,10060266DV3,10067113DV1,10067112DV1,10063227DV1,10073397DV4,10073397DV2,10073397DV1,10064929DV1,10074472DV1,10073397DV3,10064929DV2,10026536DV2,10024210DV1,10026536DV1,10026536DV3,10089527,10090700,10077954,10080040,10094372,10095270,10096314,10096316,10096317,10096333,10096353,10096779,10097780,10097779,10097994,10098172,10098175,10098177,10098178,10099007</Value>
+              <Value AttributeID="PMDM.AT.RhythmInternalName" Derived="true">TRMK_TriMarketPlace_Tabletop_Tabletop Condiment Dispensers_Squeeze Bottles</Value>
+            </MetaData>
+          </Classification>
+        </Classification>
+      </Classification>
+    </Classification>
+  </Classifications>
+
+  <Assets>
+    <Asset ID="A-3351915" UserTypeID="ProductImage" Selected="false" Referenced="true">
+      <Values>
+        <Value AttributeID="AssetDownload.AssetURLAttribute">https://cdn.trimarkusa.com/assets/product_images/trimark_noimage.jpg</Value>
+        <Value AttributeID="asset.mime-type">image/jpeg</Value>
+      </Values>
+    </Asset>
+  </Assets>
+
+  <Products>
+    <Product ID="P-3216632" UserTypeID="PMDM.PRD.GoldenRecord" ParentID="INT.L3-6024289">
+      <KeyValue KeyID="PMDM.Key.Golden.SKU">10026537</KeyValue>
+      <Name>16 OZ BOTTLE W/LRG BLUE VALVE</Name>
+      <AttributeLink AttributeID="PMDM.AT.MinimumTemperature" Inherited="1">
+        <MetaData>
+          <Value AttributeID="PMDM.AT.DisplaySequence">24</Value>
+        </MetaData>
+      </AttributeLink>
+      <AttributeLink AttributeID="PMDM.AT.NumberofCompartments" Inherited="1">
+        <MetaData>
+          <Value AttributeID="PMDM.AT.DisplaySequence">23</Value>
+        </MetaData>
+      </AttributeLink>
+      <AttributeLink AttributeID="PMDM.AT.Lighting" Inherited="1">
+        <MetaData>
+          <Value AttributeID="PMDM.AT.DisplaySequence">27</Value>
+        </MetaData>
+      </AttributeLink>
+      <AttributeLink AttributeID="PMDM.AT.MaximumTemperature" Inherited="1">
+        <MetaData>
+          <Value AttributeID="PMDM.AT.DisplaySequence">25</Value>
+        </MetaData>
+      </AttributeLink>
+      <AttributeLink AttributeID="PMDM.AT.Adjustability" Inherited="1">
+        <MetaData>
+          <Value AttributeID="PMDM.AT.DisplaySequence">26</Value>
+        </MetaData>
+      </AttributeLink>
+      <AttributeLink AttributeID="PMDM.AT.Durability" Inherited="1">
+        <MetaData>
+          <Value AttributeID="PMDM.AT.DisplaySequence">17</Value>
+        </MetaData>
+      </AttributeLink>
+      <AttributeLink AttributeID="PMDM.AT.EachPerCasePallet" Inherited="1">
+        <MetaData>
+          <Value AttributeID="PMDM.AT.DisplaySequence">28</Value>
+        </MetaData>
+      </AttributeLink>
+      <AttributeLink AttributeID="PMDM.AT.EnergySource" Inherited="1">
+        <MetaData>
+          <Value AttributeID="PMDM.AT.DisplaySequence">14</Value>
+        </MetaData>
+      </AttributeLink>
+      <AttributeLink AttributeID="PMDM.AT.Function" Inherited="1">
+        <MetaData>
+          <Value AttributeID="PMDM.AT.DisplaySequence">12</Value>
+        </MetaData>
+      </AttributeLink>
+      <AttributeLink AttributeID="PMDM.AT.Installation" Inherited="1">
+        <MetaData>
+          <Value AttributeID="PMDM.AT.DisplaySequence">13</Value>
+        </MetaData>
+      </AttributeLink>
+      <AttributeLink AttributeID="PMDM.AT.Voltage" Inherited="1">
+        <MetaData>
+          <Value AttributeID="PMDM.AT.DisplaySequence">15</Value>
+        </MetaData>
+      </AttributeLink>
+      <AttributeLink AttributeID="PMDM.AT.Finish" Inherited="1">
+        <MetaData>
+          <Value AttributeID="PMDM.AT.DisplaySequence">16</Value>
+        </MetaData>
+      </AttributeLink>
+      <AttributeLink AttributeID="PMDM.AT.Quantity" Inherited="2"/>
+      <AttributeLink AttributeID="PMDM.AT.LidType" Inherited="2"/>
+      <AttributeLink AttributeID="PMDM.AT.TotalBTU" Inherited="2">
+        <MetaData>
+          <Value AttributeID="PMDM.AT.DisplaySequence">15</Value>
+        </MetaData>
+      </AttributeLink>
+      <AttributeLink AttributeID="PMDM.AT.Wattage" Inherited="2"/>
+      <AttributeLink AttributeID="PMDM.AT.Gauge" Inherited="2"/>
+      <AttributeLink AttributeID="PMDM.AT.Guage" Inherited="2"/>
+      <AttributeLink AttributeID="PMDM.AT.BTU" Inherited="2"/>
+      <AttributeLink AttributeID="PMDM.AT.BurnerBTU" Inherited="2">
+        <MetaData>
+          <Value AttributeID="PMDM.AT.DisplaySequence">16</Value>
+        </MetaData>
+      </AttributeLink>
+      <AttributeLink AttributeID="NewAttribute" Inherited="4"/>
+      <AttributeLink AttributeID="PMDM.AT.PackagingHeight" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.PackagingGrossWeight" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.Pattern" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.ItemName" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.PackagingDepth" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.MinimumOrderQty" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.Material" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.ProductApprovalStatus" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.LegacyERPID" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.ProductApprovalDate" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.Dimension" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.PackagingWidth" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.PackagingVolume" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.Color" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.ListPrice" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.LeadTime" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.Collection" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.ColorFamily" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.IsOrderableUnit" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.IsInvoiceUnit" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.Category" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.ManufacturersPartNumber" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.ManufacturerWarranty" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.BaseName" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.ManufacturerName" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.LongItemDescription" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.Prop65" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.FeatureBullet1" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.ProductImages" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.ERPLine" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.CustomItem" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.DescriptionWeb" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.Warranty" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.DescriptionLong" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.PrimaryProductImage" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.IsBaseUnit" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.SupplyAmericaID" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.SDS" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.GroundTransportationRestrictions" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.Specsheet" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.FeatureBullet3" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.ProductVideo" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.FeatureBullet2" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.NameWeb" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.Prop65Label" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.BrandName" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.ProductCad" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.AvailabilityEnd" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.UnitOfMeasure" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.ProductDoc" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.AnnualSalesForecastMinimum" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.OwnersManual" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.AnnualSalesForecastMaximum" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.Style" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.ProductAudio" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.CountryOfOrigin" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.CostExpirationDate" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.Size" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.InstallationManual" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.CostEffectiveDate" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.Cost" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.Shape" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.UNSPSC" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.HazardousMaterialType" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.StackedHeight" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.HazardousMaterial" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.EnergyStarRating" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.ReesesLaw" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.EnergyStarCertified" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.ProductWeight" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.EquipmentFlag" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.ProductHeight" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.TMPrivateLabel" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.ProductDepth" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.ProductApprovalUserID" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.Stackable" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.ShortItemDescription" Inherited="5"/>
+      <AttributeLink AttributeID="PDMDM.AT.PrivateLabelSub" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.SellingPrice" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.PrivateLabelID" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.ProductWidth" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.BrandNameLong" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.InventoryStatus" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.ManufacturerID" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.AirTransportationRestrictions" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.Discontinue" Inherited="5"/>
+      <ClassificationReference ClassificationID="WebCat_6065759" Type="PMDM.P2CLT.WebsiteLink"/>
+      <AssetCrossReference AssetID="A-3351915" Type="PMDM.IDRT.PrimaryProductImage" Changed="true">
+<Asset ID="A-3351915" UserTypeID="ProductImage">
+      <Values>
+        <Value AttributeID="AssetDownload.AssetURLAttribute">https://cdn.trimarkusa.com/assets/product_images/trimark_noimage.jpg</Value>
+        <Value AttributeID="asset.mime-type">image/jpeg</Value>
+      </Values>
+    </Asset></AssetCrossReference>
+      <Values>
+        <Value AttributeID="PMDM.AT.ShortItemDescription">16 OZ BOTTLE WLRG BLUE VALVE</Value>
+        <Value AttributeID="PMDM.AT.HazardousMaterial" ID="N">No</Value>
+        <Value AttributeID="PMDM.AT.ProductDepth" UnitID="unece.unit.INH">0</Value>
+        <Value AttributeID="PMDM.AT.DescriptionWeb" Changed="true">The FIFO Innovations 16 oz FIFO Bottle with Large Blue Valve is designed for first in, first out food rotation, ensuring sauces are always ready to pour with its gravity-fed, bottom-dispensing design. This fast-dispensing system eliminates the need to shake or bang bottles, reducing waste by minimizing leftover sauce. Dual openings make cleaning effortless, while NSF certification guarantees the highest food safety standards. </Value>
+        <Value AttributeID="PMDM.AT.BrandName">FIFOINNOVA</Value>
+        <Value AttributeID="PMDM.AT.ManufacturerID">V0002010</Value>
+        <Value AttributeID="PMDM.AT.SupplierID">V0002010</Value>
+        <Value AttributeID="PMDM.AT.UnitOfMeasure" ID="EA">Each</Value>
+        <Value AttributeID="PMDM.AT.ProductWeight" UnitID="unece.unit.LBR">0</Value>
+        <Value AttributeID="PMDM.AT.ProductHeight" UnitID="unece.unit.INH">0</Value>
+        <Value AttributeID="PMDM.AT.Prop65" ID="Y">Yes</Value>
+        <Value AttributeID="PMDM.AT.SupplierPartNumber">CB16NSF300-ON</Value>
+        <Value AttributeID="PMDM.AT.TMPrivateLabel" ID="N">No</Value>
+        <Value AttributeID="PMDM.AT.ProductWidth" UnitID="unece.unit.INH">0</Value>
+        <Value AttributeID="PMDM.AT.M3Status">20</Value>
+        <MultiValue AttributeID="PMDM.AT.LegacyERPID">
+          <Value>184544</Value>
+        </MultiValue>
+        <Value AttributeID="PMDM.AT.BrandNameLong">FIFO INNOVATIONS</Value>
+        <Value AttributeID="PMDM.AT.ManufacturersPartNumber">CB16NSF300-ON</Value>
+        <Value AttributeID="PMDM.AT.NameWeb">FIFO Innovations Fifo Bottle with Large Blue Valve 16 oz</Value>
+        <Value AttributeID="PMDM.AT.ItemName">16 OZ BOTTLE W/LRG BLUE VALVE</Value>
+        <Value AttributeID="PMDM.AT.SKU">10026537</Value>
+      </Values>
+    </Product>
+    <Product ID="P-3306323" UserTypeID="PMDM.PRD.GoldenRecord" ParentID="INT.L3-489193">
+      <KeyValue KeyID="PMDM.Key.Golden.SKU">10060176</KeyValue>
+      <Name>WINE GLASS-8.5 OZ. 12 EA./CS.</Name>
+      <AttributeLink AttributeID="PMDM.AT.StemLength" Inherited="1">
+        <MetaData>
+          <Value AttributeID="PMDM.AT.DisplaySequence">23</Value>
+        </MetaData>
+      </AttributeLink>
+      <AttributeLink AttributeID="PMDM.AT.RimType" Inherited="1">
+        <MetaData>
+          <Value AttributeID="PMDM.AT.DisplaySequence">20</Value>
+        </MetaData>
+      </AttributeLink>
+      <AttributeLink AttributeID="PMDM.AT.Quantity" Inherited="1">
+        <MetaData>
+          <Value AttributeID="PMDM.AT.DisplaySequence">29</Value>
+        </MetaData>
+      </AttributeLink>
+      <AttributeLink AttributeID="PMDM.AT.Design" Inherited="1">
+        <MetaData>
+          <Value AttributeID="PMDM.AT.DisplaySequence">13</Value>
+        </MetaData>
+      </AttributeLink>
+      <AttributeLink AttributeID="PMDM.AT.BaseDiameter" Inherited="1">
+        <MetaData>
+          <Value AttributeID="PMDM.AT.DisplaySequence">21</Value>
+        </MetaData>
+      </AttributeLink>
+      <AttributeLink AttributeID="PMDM.AT.WineStyle" Inherited="1">
+        <MetaData>
+          <Value AttributeID="PMDM.AT.DisplaySequence">18</Value>
+        </MetaData>
+      </AttributeLink>
+      <AttributeLink AttributeID="PMDM.AT.TopDiameter" Inherited="1">
+        <MetaData>
+          <Value AttributeID="PMDM.AT.DisplaySequence">22</Value>
+        </MetaData>
+      </AttributeLink>
+      <AttributeLink AttributeID="PMDM.AT.StemType" Inherited="1">
+        <MetaData>
+          <Value AttributeID="PMDM.AT.DisplaySequence">19</Value>
+        </MetaData>
+      </AttributeLink>
+      <AttributeLink AttributeID="PMDM.AT.EachPerCasePallet" Inherited="1">
+        <MetaData>
+          <Value AttributeID="PMDM.AT.DisplaySequence">30</Value>
+        </MetaData>
+      </AttributeLink>
+      <AttributeLink AttributeID="PMDM.AT.Capacity" Inherited="3">
+        <MetaData>
+          <Value AttributeID="PMDM.AT.DisplaySequence">7</Value>
+        </MetaData>
+      </AttributeLink>
+      <AttributeLink AttributeID="PMDM.AT.Standards" Inherited="3"/>
+      <AttributeLink AttributeID="PMDM.AT.Depth" Inherited="3">
+        <MetaData>
+          <Value AttributeID="PMDM.AT.DisplaySequence">5</Value>
+        </MetaData>
+      </AttributeLink>
+      <AttributeLink AttributeID="PMDM.AT.BrandNameLong" Inherited="3"/>
+      <AttributeLink AttributeID="PMDM.AT.ProductType" Inherited="3">
+        <MetaData>
+          <Value AttributeID="PMDM.AT.DisplaySequence">1</Value>
+        </MetaData>
+      </AttributeLink>
+      <AttributeLink AttributeID="NewAttribute" Inherited="4"/>
+      <AttributeLink AttributeID="PMDM.AT.PackagingHeight" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.PackagingGrossWeight" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.Pattern" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.ItemName" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.PackagingDepth" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.MinimumOrderQty" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.Material" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.ProductApprovalStatus" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.LegacyERPID" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.ProductApprovalDate" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.Dimension" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.PackagingWidth" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.PackagingVolume" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.Color" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.ListPrice" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.LeadTime" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.Collection" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.ColorFamily" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.IsOrderableUnit" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.IsInvoiceUnit" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.Category" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.ManufacturersPartNumber" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.ManufacturerWarranty" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.BaseName" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.ManufacturerName" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.LongItemDescription" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.Prop65" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.FeatureBullet1" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.ProductImages" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.ERPLine" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.CustomItem" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.DescriptionWeb" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.Warranty" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.DescriptionLong" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.PrimaryProductImage" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.IsBaseUnit" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.SupplyAmericaID" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.SDS" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.GroundTransportationRestrictions" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.Specsheet" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.FeatureBullet3" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.ProductVideo" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.FeatureBullet2" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.NameWeb" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.Prop65Label" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.BrandName" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.ProductCad" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.AvailabilityEnd" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.UnitOfMeasure" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.ProductDoc" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.AnnualSalesForecastMinimum" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.OwnersManual" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.AnnualSalesForecastMaximum" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.Style" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.ProductAudio" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.CountryOfOrigin" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.CostExpirationDate" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.Size" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.InstallationManual" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.CostEffectiveDate" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.Cost" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.Shape" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.UNSPSC" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.HazardousMaterialType" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.StackedHeight" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.HazardousMaterial" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.EnergyStarRating" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.ReesesLaw" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.EnergyStarCertified" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.ProductWeight" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.EquipmentFlag" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.ProductHeight" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.TMPrivateLabel" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.ProductDepth" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.ProductApprovalUserID" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.Stackable" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.ShortItemDescription" Inherited="5"/>
+      <AttributeLink AttributeID="PDMDM.AT.PrivateLabelSub" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.SellingPrice" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.PrivateLabelID" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.ProductWidth" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.InventoryStatus" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.ManufacturerID" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.AirTransportationRestrictions" Inherited="5"/>
+      <AttributeLink AttributeID="PMDM.AT.Discontinue" Inherited="5"/>
+      <ClassificationReference ClassificationID="WebCat_272824" Type="PMDM.P2CLT.WebsiteLink" Changed="true"/>
+      <ClassificationReference ClassificationID="WebCat_272826" Type="PMDM.P2CLT.WebsiteLink"/>
+      <AssetCrossReference AssetID="A-3351915" Type="PMDM.IDRT.PrimaryProductImage" Changed="true">
+<Asset ID="A-3351915" UserTypeID="ProductImage">
+      <Values>
+        <Value AttributeID="AssetDownload.AssetURLAttribute">https://cdn.trimarkusa.com/assets/product_images/trimark_noimage.jpg</Value>
+        <Value AttributeID="asset.mime-type">image/jpeg</Value>
+      </Values>
+    </Asset></AssetCrossReference>
+      <Values>
+        <Value AttributeID="PMDM.AT.ShortItemDescription">FLUTE GLASS 812 OZ SAFEDGE RIM GUARANTEE STEMLESS H</Value>
+        <Value AttributeID="PMDM.AT.HazardousMaterial" ID="N">No</Value>
+        <Value AttributeID="PMDM.AT.TopDiameter" UnitID="unece.unit.INH">1.75</Value>
+        <Value AttributeID="PMDM.AT.OverallHeight" UnitID="unece.unit.INH">5.75</Value>
+        <Value AttributeID="PMDM.AT.Shape">Round</Value>
+        <Value AttributeID="PMDM.AT.BrandName">LIBBEY</Value>
+        <Value AttributeID="PMDM.AT.Collection">Classics</Value>
+        <Value AttributeID="PMDM.AT.SupplierID">V0003704</Value>
+        <Value AttributeID="PMDM.AT.UnitOfMeasure" ID="CS">Case</Value>
+        <Value AttributeID="PMDM.AT.ManufacturerWarranty">5 yr</Value>
+        <Value AttributeID="PMDM.AT.ProductHeight" UnitID="unece.unit.INH">5.75</Value>
+        <MultiValue AttributeID="PMDM.AT.Material">
+          <Value>Glass</Value>
+        </MultiValue>
+        <Value AttributeID="PMDM.AT.FeatureBullet1">Safedge Rim Guarantee</Value>
+        <Value AttributeID="PMDM.AT.Prop65" ID="Y">Yes</Value>
+        <Value AttributeID="PMDM.AT.SupplierPartNumber">228</Value>
+        <Value AttributeID="PMDM.AT.TMPrivateLabel" ID="N">No</Value>
+        <MultiValue AttributeID="PMDM.AT.ProductType">
+          <Value>Wine Glass</Value>
+        </MultiValue>
+        <Value AttributeID="PMDM.AT.M3Status">20</Value>
+        <MultiValue AttributeID="PMDM.AT.Color" Changed="true">
+          <Value>Clear</Value>
+        </MultiValue>
+        <Value AttributeID="PMDM.AT.BrandNameLong">LIBBEY</Value>
+        <Value AttributeID="PMDM.AT.ManufacturersPartNumber">228</Value>
+        <Value AttributeID="PMDM.AT.Capacity" UnitID="unece.unit.ONZ">8.5</Value>
+        <Value AttributeID="PMDM.AT.ItemName">WINE GLASS-8.5 OZ. 12 EA./CS.</Value>
+        <Value AttributeID="PMDM.AT.WineStyle">Champagne</Value>
+        <Value AttributeID="PMDM.AT.BaseDiameter">1.4</Value>
+        <Value AttributeID="PMDM.AT.StemType">Stemless</Value>
+        <Value AttributeID="PMDM.AT.ProductDepth" UnitID="unece.unit.INH">2.25</Value>
+        <Value AttributeID="PMDM.AT.DescriptionWeb">Not another boring wine glass. The Stemless Flute Glass offers a uniquely elegant way to serve champagne, sparking wine and other varieties of wine. Classically shaped and backed by the Safedge Rim Guarantee, Stemless Glass is made to last a lifetime and look great doing it. Should the rim ever chip, Libbey will refund or replace the glass. Without a stem, the wine glass saves space in the dishwasher and in the cabinet.</Value>
+        <Value AttributeID="PMDM.AT.ManufacturerID">V0003704</Value>
+        <Value AttributeID="PMDM.AT.FeatureBullet2">Olive Wood Flights</Value>
+        <Value AttributeID="PMDM.AT.ProductWeight" UnitID="unece.unit.LBR">3.9</Value>
+        <Value AttributeID="PMDM.AT.BRAND">Libbey</Value>
+        <Value AttributeID="PMDM.AT.ProductWidth" UnitID="unece.unit.INH">2.25</Value>
+        <MultiValue AttributeID="PMDM.AT.LegacyERPID">
+          <Value>29079</Value>
+        </MultiValue>
+        <Value AttributeID="PMDM.AT.Quantity">12 Per Case</Value>
+        <Value AttributeID="PMDM.AT.RimType">Rimmed</Value>
+        <Value AttributeID="PMDM.AT.NameWeb">Libbey Stemless Flute Glass 8.5 oz</Value>
+        <MultiValue AttributeID="PMDM.AT.ColorFamily" Changed="true">
+          <Value>Clear</Value>
+        </MultiValue>
+        <Value AttributeID="PMDM.AT.OverallDiameter" UnitID="unece.unit.INH">2.25</Value>
+        <Value AttributeID="PMDM.AT.SKU">10060176</Value>
+      </Values>
+    </Product>
+  </Products>
+</STEP-ProductInformation>

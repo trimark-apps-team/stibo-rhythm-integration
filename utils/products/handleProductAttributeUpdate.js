@@ -63,7 +63,7 @@ function handleProductAttributeUpdate(itemJson) {
                           "values": [
                             {
                               "languageCode": "en",
-                              "value": item["value"]
+                              "value": Array.isArray(item["value"]) ? item["value"].join(', ') : String(item["value"])
                             }
                           ]
                    }

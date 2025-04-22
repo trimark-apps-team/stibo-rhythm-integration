@@ -49,13 +49,15 @@
 </head>
 <body>
   <h1>🛠 STIBO Rhythm Integration Endpoints</h1>
-  <ul>
+  <!-- <ul>
     <li><a href="/process/products">🔄 Process Products</a></li>
     <li><a href="/process/attributes">🔄 Process Attributes</a></li>
     <li><a href="/process/webclassification">📚 Process Web Classification</a></li>
-    <li><a href="/process/attributes/update">🔧 Update Attributes</a></li>
-    <li><a href="/process/productimage/update">🖼 Update Product Image</a></li>
+    </ul> -->
+    <h2>Ecommerce Enrichment</h2>
+    <li><a href="/process/attributes/update">🔧 Add New Attributes To Rhythm</a></li>
     <li><a href="/process/productattributes/update">🔧 Update Product Attributes</a></li>
+    <li><a href="/process/productimage/update">🖼 Update Product Images</a></li>
     <li><a href="/process/productresource/update">🔧 Update Product Resources</a></li>
   </ul>
 
@@ -67,6 +69,19 @@
   </div>
 
   <script>
+    const eventSource = new EventSource('/events');
+  
+    eventSource.onmessage = function (event) {
+      const msg = document.createElement('div');
+      msg.textContent = event.data;
+      document.body.appendChild(msg);
+    };
+  
+    eventSource.onerror = function () {
+      console.error('EventSource failed.');
+    };
+  </script>
+  <script>
     fetch('/sftp-status')
       .then(res => res.json())
       .then(data => {
@@ -76,13 +91,13 @@
         const fileList = document.getElementById('file-list');
         fileList.innerHTML = '';
 
-        if (Array.isArray(data.files)) {
-          data.files.forEach(file => {
-            const li = document.createElement('li');
-            li.textContent = `${file.name} (${file.type})`;
-            fileList.appendChild(li);
-          });
-        }
+        // if (Array.isArray(data.files)) {
+        //   data.files.forEach(file => {
+        //     const li = document.createElement('li');
+        //     li.textContent = `${file.name} (${file.type})`;
+        //     fileList.appendChild(li);
+        //   });
+        // }
       })
       .catch(err => {
         document.getElementById('sftp-status-msg').textContent = '❌ Failed to connect to SFTP';

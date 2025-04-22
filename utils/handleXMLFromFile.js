@@ -21,15 +21,26 @@ function transformAttributeLink(attributeLinkObj) {
 
 
 function transformAttributeValues(obj) {
-  if (!obj || !obj.Value) return obj;
-
-  const values = Array.isArray(obj.Value) ? obj.Value : [obj.Value];
+  if (!obj) return obj;
 
   const transformed = {};
 
+  // Normalize arrays
+  const values = [].concat(obj.Value || []);
+  const multiValues = [].concat(obj.MultiValue || []);
+
+  // Handle <Value> nodes
   values.forEach(item => {
     if (item.$ && item.$.AttributeID) {
       transformed[item.$.AttributeID] = item._ || null;
+    }
+  });
+
+  // Handle <MultiValue> nodes
+  multiValues.forEach(item => {
+    if (item.$ && item.$.AttributeID) {
+      const mvValues = [].concat(item.Value || []);
+      transformed[item.$.AttributeID] = mvValues.map(v => (typeof v === 'string' ? v : v._ || v));
     }
   });
 

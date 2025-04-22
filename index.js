@@ -23,6 +23,9 @@ const handleProductResourceLinkUpdate = require('./utils/products/handleProductR
 const app = express();
 const port = 3000;
 
+// used for event logging on frontend
+let clients = [];
+
 //get express application ip address
 const agent = new https.Agent({ rejectUnauthorized: false });
 
@@ -39,6 +42,21 @@ app.use(express.static('public'));
 // --- ROUTES ---
 app.get('/', async (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+
+// event logging for index.html
+app.get('/events', (req, res) => {
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+
+  const send = msg => res.write(`data: ${msg}\n\n`);
+  clients.push(send); // store client connection
+
+  req.on('close', () => {
+    clients = clients.filter(c => c !== send);
+  });
 });
 
 app.get('/sftp-status', async (req, res) => {
@@ -67,12 +85,71 @@ app.get('/process/webclassification', async (req, res) => {
 
 app.get('/process/attributes/update', async (req, res) => {
   try {
+    const config = {
+      tenantId: process.env.INFOR_TENANT_ID_TST,
+      secret: process.env.INFOR_ECOMM_ENRICHMENT_SECRET,
+      baseUrl: process.env.INFOR_ENRICHMENT_BASE_URL,
+      clientEmail: process.env.INFOR__ENRICHMENT_CLIENT_EMAIL
+    };
     const filePath = getLatestUploadedFile('AttributesEcommerce');
     const attributeJson = await handleXmlFromFile(filePath, 'AttributeData', true);
     const attributeRequestBodies = handleAttributeUpdate(attributeJson);
+
+    for (const attributeRequestBody of attributeRequestBodies) {
+      try {
+       
+        const response = await makeInforRequest({
+          ...config,
+          urlPath: '/admin/attributes', 
+          method: 'PUT',
+          data: attributeRequestBody
+        });
+
+        console.log('Result:', response);
+      } catch (err) {
+        console.error('Request failed:', err);
+      }
+    }
     res.json(attributeRequestBodies);
   } catch (error) {
     console.error('Error processing attribute update:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+app.get('/process/productattributes/update', async (req, res) => {
+  try {
+    const config = {
+      tenantId: process.env.INFOR_TENANT_ID_TST,
+      secret: process.env.INFOR_ECOMM_ENRICHMENT_SECRET,
+      baseUrl: process.env.INFOR_ENRICHMENT_BASE_URL,
+      clientEmail: process.env.INFOR__ENRICHMENT_CLIENT_EMAIL
+    };
+    const filePath = getLatestUploadedFile('ProductsEcommerce');
+    const itemJson = await handleXmlFromFile(filePath, 'ProductData', true);
+    const productAttributeRequestBodies = handleProductAttributeUpdate(itemJson);
+
+    for (const item of productAttributeRequestBodies) {
+      try {
+        
+        const itemNumber = item.itemID;
+        const requestBody = item.dynamicAttributePayload;
+        console.log(requestBody)
+        const response = await makeInforRequest({
+          ...config,
+          urlPath: `/admin/items/${itemNumber}/attributes`,
+          method: 'POST',
+          data: { dynamicAttributePayload: requestBody}
+        });
+
+        console.log('Result:', response);
+      } catch (err) {
+        console.error('Request failed:', err);
+      }
+    }
+    res.json(productAttributeRequestBodies);
+  } catch (error) {
+    console.error('Error processing product image update:', error);
     res.status(500).send('Internal Server Error');
   }
 });
@@ -107,9 +184,33 @@ app.get('/process/productresource/update', async (req, res) => {
 
 app.get('/process/productimage/update', async (req, res) => {
   try {
+    const config = {
+      tenantId: process.env.INFOR_TENANT_ID_TST,
+      secret: process.env.INFOR_ECOMM_ENRICHMENT_SECRET,
+      baseUrl: process.env.INFOR_ENRICHMENT_BASE_URL,
+      clientEmail: process.env.INFOR__ENRICHMENT_CLIENT_EMAIL
+    };
+
     const filePath = getLatestUploadedFile('ProductsEcommerce');
     const itemJson = await handleXmlFromFile(filePath, 'ProductData', true);
     const productImageRequestBodies = handleProductImageUpdate(itemJson);
+    for (const item of productImageRequestBodies) {
+      try {
+        
+        const itemNumber = item.keyvalue.value;
+        const requestBody = item.imagePayload;
+        const response = await makeInforRequest({
+          ...config,
+          urlPath: `/admin/items/${itemNumber}/images`, 
+          method: 'POST',
+          data: { imagePayload: requestBody}// empty body for this endpoint
+        });
+
+        console.log('Result:', response);
+      } catch (err) {
+        console.error('Request failed:', err);
+      }
+    }
     res.json(productImageRequestBodies);
   } catch (error) {
     console.error('Error processing product image update:', error);
@@ -117,17 +218,7 @@ app.get('/process/productimage/update', async (req, res) => {
   }
 });
 
-app.get('/process/productattributes/update', async (req, res) => {
-  try {
-    const filePath = getLatestUploadedFile('ProductsEcommerce');
-    const itemJson = await handleXmlFromFile(filePath, 'ProductData', true);
-    const productAttributeRequestBodies = handleProductAttributeUpdate(itemJson);
-    res.json(productAttributeRequestBodies);
-  } catch (error) {
-    console.error('Error processing product image update:', error);
-    res.status(500).send('Internal Server Error');
-  }
-});
+
 
 /** GENERIC API */
 app.get('/process/getGenericToken', async (req, res) => {

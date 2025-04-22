@@ -4,7 +4,7 @@ function handleProductResourceLinkUpdate(itemJson) {
     const productsArray = Object.values(itemJson["data"]["STEP-ProductInformation"].Products.Product);
     console.log(productsArray)
     const productResources = productsArray.map((product) => {
-        if(product['AssetCrossReference']['Asset']['UserTypeID'] == 'ProductImage') {
+        if(product['AssetCrossReference']['Asset']['UserTypeID'] == 'PrimaryProductImage') {
             return {
                 pimId: product['ID'],
                 keyvalue: product['KeyValue'],
@@ -14,6 +14,7 @@ function handleProductResourceLinkUpdate(itemJson) {
                 type: 'images'
             }
         }
+
         if(product['AssetCrossReference']['Asset']['UserTypeID'] == 'ProductVideo') {
             return {
                 pimId: product['ID'],
@@ -24,6 +25,40 @@ function handleProductResourceLinkUpdate(itemJson) {
                 type: 'videos'
             }
         }
+
+        if(product['AssetCrossReference']['Asset']['UserTypeID'] == 'BrandIcon') {
+            return {
+                pimId: product['ID'],
+                keyvalue: product['KeyValue'],
+                name: product['Name'],
+                resourceurl: product['AssetCrossReference']['Asset']['Values']['AssetDownload.AssetURLAttribute'] || '',
+                resourceMimeType: product['AssetCrossReference']['Asset']['Values']['asset.mime-type'] || '',
+                type: 'brandicon'
+            }
+        }
+
+        if(product['AssetCrossReference']['Asset']['UserTypeID'] == 'ProductIcon') {
+            return {
+                pimId: product['ID'],
+                keyvalue: product['KeyValue'],
+                name: product['Name'],
+                resourceurl: product['AssetCrossReference']['Asset']['Values']['AssetDownload.AssetURLAttribute'] || '',
+                resourceMimeType: product['AssetCrossReference']['Asset']['Values']['asset.mime-type'] || '',
+                type: 'producticon'
+            }
+        }
+
+        if(product['AssetCrossReference']['Asset']['UserTypeID'] == 'ProductAudio') {
+            return {
+                pimId: product['ID'],
+                keyvalue: product['KeyValue'],
+                name: product['Name'],
+                resourceurl: product['AssetCrossReference']['Asset']['Values']['AssetDownload.AssetURLAttribute'] || '',
+                resourceMimeType: product['AssetCrossReference']['Asset']['Values']['asset.mime-type'] || '',
+                type: 'audio'
+            }
+        }
+
         else {
             return {
                 pimId: product['ID'],
