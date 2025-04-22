@@ -1,0 +1,378 @@
+[
+  {
+    "context": "catalogs::categories::items",
+    "data": {
+      "items": [
+        "10002450",
+        "10005464",
+        "10006001",
+        "10006349",
+        "10009538",
+        "10009586",
+        "10009588",
+        "10009584",
+        "10010250",
+        "10010482",
+        "10010490",
+        "10010487",
+        "10010480",
+        "10010527",
+        "10014141",
+        "10015943",
+        "10015944",
+        "10015945",
+        "10015942",
+        "10023644",
+        "10026915",
+        "10029770",
+        "10030688",
+        "10030694",
+        "10030806",
+        "10031487",
+        "10034747",
+        "10035859",
+        "10051788",
+        "10051789",
+        "10061576",
+        "10063525",
+        "10066565",
+        "10068202",
+        "10068271",
+        "10068657",
+        "10069574",
+        "10070116",
+        "10070299",
+        "10073118",
+        "10088839",
+        "10079626",
+        "10096730",
+        "10097166",
+        "10078899"
+      ],
+      "key": "Aprons",
+      "recipientEmails": [
+        "xxx@yyy.com"
+      ]
+    },
+    "dataFormatVersion": 0,
+    "dataId": "Unknown",
+    "groupId": "groupId",
+    "notes": "notes",
+    "source": "PIM",
+    "type": "Created"
+  },
+  {
+    "context": "catalogs::categories::items",
+    "data": {
+      "items": [
+        "10011545",
+        "10030993",
+        "10030990",
+        "10031162",
+        "10031161",
+        "10040084",
+        "10028669",
+        "10091270",
+        "10091273"
+      ],
+      "key": "Caps & Hats",
+      "recipientEmails": [
+        "xxx@yyy.com"
+      ]
+    },
+    "dataFormatVersion": 0,
+    "dataId": "Unknown",
+    "groupId": "groupId",
+    "notes": "notes",
+    "source": "PIM",
+    "type": "Created"
+  },
+  {
+    "context": "catalogs::categories::items",
+    "data": {
+      "items": [
+        "10009543",
+        "10031168",
+        "10031166",
+        "10031165",
+        "10042944",
+        "10046036",
+        "10065773",
+        "10100454"
+      ],
+      "key": "Chef Coats & Jackets",
+      "recipientEmails": [
+        "xxx@yyy.com"
+      ]
+    },
+    "dataFormatVersion": 0,
+    "dataId": "Unknown",
+    "groupId": "groupId",
+    "notes": "notes",
+    "source": "PIM",
+    "type": "Created"
+  },
+  {
+    "context": "catalogs::categories::items",
+    "data": {
+      "items": [
+        "10038819",
+        "10092948",
+        "10092949"
+      ],
+      "key": "Jackets & Sweatshirts",
+      "recipientEmails": [
+        "xxx@yyy.com"
+      ]
+    },
+    "dataFormatVersion": 0,
+    "dataId": "Unknown",
+    "groupId": "groupId",
+    "notes": "notes",
+    "source": "PIM",
+    "type": "Created"
+  },
+  {
+    "context": "catalogs::categories::items",
+    "data": {
+      "items": [
+        "10031169",
+        "10031172",
+        "10031171",
+        "10065779"
+      ],
+      "key": "Pants & Shorts",
+      "recipientEmails": [
+        "xxx@yyy.com"
+      ]
+    },
+    "dataFormatVersion": 0,
+    "dataId": "Unknown",
+    "groupId": "groupId",
+    "notes": "notes",
+    "source": "PIM",
+    "type": "Created"
+  },
+  {
+    "context": "catalogs::categories::items",
+    "data": {
+      "items": [
+        "10031164",
+        "10031163",
+        "10065776",
+        "10065777"
+      ],
+      "key": "Shirts",
+      "recipientEmails": [
+        "xxx@yyy.com"
+      ]
+    },
+    "dataFormatVersion": 0,
+    "dataId": "Unknown",
+    "groupId": "groupId",
+    "notes": "notes",
+    "source": "PIM",
+    "type": "Created"
+  },
+  {
+    "context": "catalogs::categories::items",
+    "data": {
+      "items": [
+        "10026898",
+        "10026897",
+        "10028580",
+        "10028583",
+        "10043802",
+        "10089379",
+        "10089391",
+        "10089459",
+        "10089460"
+      ],
+      "key": "Back Support Belts",
+      "recipientEmails": [
+        "xxx@yyy.com"
+      ]
+    },
+    "dataFormatVersion": 0,
+    "dataId": "Unknown",
+    "groupId": "groupId",
+    "notes": "notes",
+    "source": "PIM",
+    "type": "Created"
+  },
+  {
+    "context": "catalogs::categories::items",
+    "data": {
+      "items": [
+        "10032023",
+        "10098247"
+      ],
+      "key": "Face Masks",
+      "recipientEmails": [
+        "xxx@yyy.com"
+      ]
+    },
+    "dataFormatVersion": 0,
+    "dataId": "Unknown",
+    "groupId": "groupId",
+    "notes": "notes",
+    "source": "PIM",
+    "type": "Created"
+  },
+  {
+    "context": "catalogs::categories::items",
+    "data": {
+      "items": [
+        "10030702",
+        "10030703",
+        "10063527"
+      ],
+      "key": "Face Shields & Visors",
+      "recipientEmails": [
+        "xxx@yyy.com"
+      ]
+    },
+    "dataFormatVersion": 0,
+    "dataId": "Unknown",
+    "groupId": "groupId",
+    "notes": "notes",
+    "source": "PIM",
+    "type": "Created"
+  },
+  {
+    "context": "catalogs::categories::items",
+    "data": {
+      "items": [
+        "10001133",
+        "10004497",
+        "10004787",
+        "10006354",
+        "10007814",
+        "10007813",
+        "10007812",
+        "10008817",
+        "10009651",
+        "10010282",
+        "10011814",
+        "10011824",
+        "10013470",
+        "10015940",
+        "10018593",
+        "10018594",
+        "10018592",
+        "10019431",
+        "10019678",
+        "10019987",
+        "10021145",
+        "10024019",
+        "10025971",
+        "10025976",
+        "10030689",
+        "10030698",
+        "10030807",
+        "10030917",
+        "10030923",
+        "10031298",
+        "10031301",
+        "10031300",
+        "10031299",
+        "10031327",
+        "10031491",
+        "10031490",
+        "10031492",
+        "10031493",
+        "10032446",
+        "10035862",
+        "10036438",
+        "10037871",
+        "10053711",
+        "10053704",
+        "10060106",
+        "10060264",
+        "10061196",
+        "10061198",
+        "10061197",
+        "10061199",
+        "10061721",
+        "10062171",
+        "10062203",
+        "10062374",
+        "10062375",
+        "10062869",
+        "10063529",
+        "10063524",
+        "10063534",
+        "10070674",
+        "10073072",
+        "10074120",
+        "10075337",
+        "10075336",
+        "10075561",
+        "10058559",
+        "10058561",
+        "10058560",
+        "10087293",
+        "10087297",
+        "10087296",
+        "10089193",
+        "10090969",
+        "10092979",
+        "10093157",
+        "10093159",
+        "10093243",
+        "10093240",
+        "10093242",
+        "10096330",
+        "10096934"
+      ],
+      "key": "Gloves",
+      "recipientEmails": [
+        "xxx@yyy.com"
+      ]
+    },
+    "dataFormatVersion": 0,
+    "dataId": "Unknown",
+    "groupId": "groupId",
+    "notes": "notes",
+    "source": "PIM",
+    "type": "Created"
+  },
+  {
+    "context": "catalogs::categories::items",
+    "data": {
+      "items": [
+        "10063526"
+      ],
+      "key": "Protective Sleeves",
+      "recipientEmails": [
+        "xxx@yyy.com"
+      ]
+    },
+    "dataFormatVersion": 0,
+    "dataId": "Unknown",
+    "groupId": "groupId",
+    "notes": "notes",
+    "source": "PIM",
+    "type": "Created"
+  },
+  {
+    "context": "catalogs::categories::items",
+    "data": {
+      "items": [
+        "10034088",
+        "10070332",
+        "10071421"
+      ],
+      "key": "Safety Glasses & Goggles",
+      "recipientEmails": [
+        "xxx@yyy.com"
+      ]
+    },
+    "dataFormatVersion": 0,
+    "dataId": "Unknown",
+    "groupId": "groupId",
+    "notes": "notes",
+    "source": "PIM",
+    "type": "Created"
+  }
+]
