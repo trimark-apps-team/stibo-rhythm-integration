@@ -49,17 +49,17 @@
         "10097166",
         "10078899"
       ],
-      "key": "Aprons",
+      "key": "WebCat_271021",
       "recipientEmails": [
-        "xxx@yyy.com"
+        "ben.ray@trimarkusa.com"
       ]
     },
     "dataFormatVersion": 0,
-    "dataId": "Unknown",
-    "groupId": "groupId",
-    "notes": "notes",
+    "dataId": "WebCat_271021",
+    "groupId": "",
+    "notes": "",
     "source": "PIM",
-    "type": "Created"
+    "type": "Updated"
   },
   {
     "context": "catalogs::categories::items",
@@ -75,17 +75,17 @@
         "10091270",
         "10091273"
       ],
-      "key": "Caps & Hats",
+      "key": "WebCat_271022",
       "recipientEmails": [
-        "xxx@yyy.com"
+        "ben.ray@trimarkusa.com"
       ]
     },
     "dataFormatVersion": 0,
-    "dataId": "Unknown",
-    "groupId": "groupId",
-    "notes": "notes",
+    "dataId": "WebCat_271022",
+    "groupId": "",
+    "notes": "",
     "source": "PIM",
-    "type": "Created"
+    "type": "Updated"
   },
   {
     "context": "catalogs::categories::items",
@@ -100,17 +100,17 @@
         "10065773",
         "10100454"
       ],
-      "key": "Chef Coats & Jackets",
+      "key": "WebCat_271023",
       "recipientEmails": [
-        "xxx@yyy.com"
+        "ben.ray@trimarkusa.com"
       ]
     },
     "dataFormatVersion": 0,
-    "dataId": "Unknown",
-    "groupId": "groupId",
-    "notes": "notes",
+    "dataId": "WebCat_271023",
+    "groupId": "",
+    "notes": "",
     "source": "PIM",
-    "type": "Created"
+    "type": "Updated"
   },
   {
     "context": "catalogs::categories::items",
@@ -120,17 +120,17 @@
         "10092948",
         "10092949"
       ],
-      "key": "Jackets & Sweatshirts",
+      "key": "WebCat_271024",
       "recipientEmails": [
-        "xxx@yyy.com"
+        "ben.ray@trimarkusa.com"
       ]
     },
     "dataFormatVersion": 0,
-    "dataId": "Unknown",
-    "groupId": "groupId",
-    "notes": "notes",
+    "dataId": "WebCat_271024",
+    "groupId": "",
+    "notes": "",
     "source": "PIM",
-    "type": "Created"
+    "type": "Updated"
   },
   {
     "context": "catalogs::categories::items",
@@ -141,17 +141,17 @@
         "10031171",
         "10065779"
       ],
-      "key": "Pants & Shorts",
+      "key": "WebCat_271025",
       "recipientEmails": [
-        "xxx@yyy.com"
+        "ben.ray@trimarkusa.com"
       ]
     },
     "dataFormatVersion": 0,
-    "dataId": "Unknown",
-    "groupId": "groupId",
-    "notes": "notes",
+    "dataId": "WebCat_271025",
+    "groupId": "",
+    "notes": "",
     "source": "PIM",
-    "type": "Created"
+    "type": "Updated"
   },
   {
     "context": "catalogs::categories::items",
@@ -162,17 +162,17 @@
         "10065776",
         "10065777"
       ],
-      "key": "Shirts",
+      "key": "WebCat_271026",
       "recipientEmails": [
-        "xxx@yyy.com"
+        "ben.ray@trimarkusa.com"
       ]
     },
     "dataFormatVersion": 0,
-    "dataId": "Unknown",
-    "groupId": "groupId",
-    "notes": "notes",
+    "dataId": "WebCat_271026",
+    "groupId": "",
+    "notes": "",
     "source": "PIM",
-    "type": "Created"
+    "type": "Updated"
   },
   {
     "context": "catalogs::categories::items",
@@ -188,17 +188,17 @@
         "10089459",
         "10089460"
       ],
-      "key": "Back Support Belts",
+      "key": "WebCat_272330",
       "recipientEmails": [
-        "xxx@yyy.com"
+        "ben.ray@trimarkusa.com"
       ]
     },
     "dataFormatVersion": 0,
-    "dataId": "Unknown",
-    "groupId": "groupId",
-    "notes": "notes",
+    "dataId": "WebCat_272330",
+    "groupId": "",
+    "notes": "",
     "source": "PIM",
-    "type": "Created"
+    "type": "Updated"
   },
   {
     "context": "catalogs::categories::items",
@@ -207,17 +207,17 @@
         "10032023",
         "10098247"
       ],
-      "key": "Face Masks",
+      "key": "WebCat_272331",
       "recipientEmails": [
-        "xxx@yyy.com"
+        "ben.ray@trimarkusa.com"
       ]
     },
     "dataFormatVersion": 0,
-    "dataId": "Unknown",
-    "groupId": "groupId",
-    "notes": "notes",
+    "dataId": "WebCat_272331",
+    "groupId": "",
+    "notes": "",
     "source": "PIM",
-    "type": "Created"
+    "type": "Updated"
   },
   {
     "context": "catalogs::categories::items",
@@ -227,17 +227,17 @@
         "10030703",
         "10063527"
       ],
-      "key": "Face Shields & Visors",
+      "key": "WebCat_272332",
       "recipientEmails": [
-        "xxx@yyy.com"
+        "ben.ray@trimarkusa.com"
       ]
     },
     "dataFormatVersion": 0,
-    "dataId": "Unknown",
-    "groupId": "groupId",
-    "notes": "notes",
+    "dataId": "WebCat_272332",
+    "groupId": "",
+    "notes": "",
     "source": "PIM",
-    "type": "Created"
+    "type": "Updated"
   },
   {
     "context": "catalogs::categories::items",
@@ -325,17 +325,17 @@
         "10096330",
         "10096934"
       ],
-      "key": "Gloves",
+      "key": "WebCat_272333",
       "recipientEmails": [
-        "xxx@yyy.com"
+        "ben.ray@trimarkusa.com"
       ]
     },
     "dataFormatVersion": 0,
-    "dataId": "Unknown",
-    "groupId": "groupId",
-    "notes": "notes",
+    "dataId": "WebCat_272333",
+    "groupId": "",
+    "notes": "",
     "source": "PIM",
-    "type": "Created"
+    "type": "Updated"
   },
   {
     "context": "catalogs::categories::items",
@@ -343,17 +343,17 @@
       "items": [
         "10063526"
       ],
-      "key": "Protective Sleeves",
+      "key": "WebCat_272336",
       "recipientEmails": [
-        "xxx@yyy.com"
+        "ben.ray@trimarkusa.com"
       ]
     },
     "dataFormatVersion": 0,
-    "dataId": "Unknown",
-    "groupId": "groupId",
-    "notes": "notes",
+    "dataId": "WebCat_272336",
+    "groupId": "",
+    "notes": "",
     "source": "PIM",
-    "type": "Created"
+    "type": "Updated"
   },
   {
     "context": "catalogs::categories::items",
@@ -363,16 +363,16 @@
         "10070332",
         "10071421"
       ],
-      "key": "Safety Glasses & Goggles",
+      "key": "WebCat_272337",
       "recipientEmails": [
-        "xxx@yyy.com"
+        "ben.ray@trimarkusa.com"
       ]
     },
     "dataFormatVersion": 0,
-    "dataId": "Unknown",
-    "groupId": "groupId",
-    "notes": "notes",
+    "dataId": "WebCat_272337",
+    "groupId": "",
+    "notes": "",
     "source": "PIM",
-    "type": "Created"
+    "type": "Updated"
   }
 ]

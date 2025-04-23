@@ -6,8 +6,9 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "create:category": "ts-node src/cli/index.ts create-category",
-    "get:categories": "ts-node src/cli/getCategoriesToFile.ts",
-    "get:category-items": "ts-node src/cli/getCategoryItemsToFile.ts",
+    "convert:categories": "ts-node src/cli/getCategoriesToFile.ts",
+    "convert:category-items": "ts-node src/cli/getCategoryItemsToFile.ts",
+    "save:category-items": "ts-node src/cli/saveCategoryItems.ts",
     "send": "ts-node src/cli/index.ts",
     "test": "jest --config jest.config.ts"
   },

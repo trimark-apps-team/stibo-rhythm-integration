@@ -1,3 +1,8 @@
+import { DEFAULT_RECIPIENT_EMAILS, 
+  DEFAULT_SRC, 
+  CAT_ITEMS_CONTEXT } 
+from '../constants';
+
 export type PayloadType = 'Created' | 'Updated' | 'Deleted';
 
 interface MetaDataItem {
@@ -8,12 +13,44 @@ interface MetaDataItem {
 
 interface ClassificationNode {
   Name?: { _: string } | string;
+  ID?: string;
   MetaData?: MetaDataItem[];
   Classification?: Record<string, ClassificationNode>;
+  groupId?: string;
+  notes?: string;
 }
 
 // Helper function to extract metadata into a flat object
-function extractMetaData(
+function extractItems(
+  meta: MetaDataItem[] | { Value: MetaDataItem[] } = []
+): Record<string, string> {
+  // Extract meta.Value if available
+  if ('Value' in meta && Array.isArray(meta.Value)) {
+    meta = meta.Value;
+  }
+
+  // Check that meta is an array
+  if (!Array.isArray(meta)) {
+    //console.warn('MetaData is not an array:', meta);
+    return {};
+  }
+
+  const result: Record<string, string> = {};
+
+  for (const obj of meta) {
+    if (obj.AttributeID === 'PMDM.AT.LinkedGoldenRecords' && obj._) {
+      // Split into an array and rejoin with commas (still as string)
+      result[obj.AttributeID] = obj._;
+    } else if (obj.AttributeID && obj.Value) {
+      result[obj.AttributeID] = obj.Value;
+    }
+  }
+
+  return result;
+}
+
+// Helper function to extract metadata into a flat object
+function extractEventType(
   meta: MetaDataItem[] | { Value: MetaDataItem[] } = []
 ): Record<string, string> {
   // Extract meta.Value if available
@@ -30,7 +67,36 @@ function extractMetaData(
   const result: Record<string, string> = {};
 
   for (const obj of meta) {
-    if (obj.AttributeID === 'PMDM.AT.LinkedGoldenRecords' && obj._) {
+    if (obj.AttributeID === 'PMDM.AT.InforStatus' && obj._) {
+      // Split into an array and rejoin with commas (still as string)
+      result[obj.AttributeID] = obj._;
+    } else if (obj.AttributeID && obj.Value) {
+      result[obj.AttributeID] = obj.Value;
+    }
+  }
+
+  return result;
+}
+
+// Helper function to extract metadata into a flat object
+function extractWebKey(
+  meta: MetaDataItem[] | { Value: MetaDataItem[] } = []
+): Record<string, string> {
+  // Extract meta.Value if available
+  if ('Value' in meta && Array.isArray(meta.Value)) {
+    meta = meta.Value;
+  }
+
+  // Check that meta is an array
+  if (!Array.isArray(meta)) {
+    console.warn('MetaData is not an array:', meta);
+    return {};
+  }
+
+  const result: Record<string, string> = {};
+
+  for (const obj of meta) {
+    if (obj.AttributeID === 'PMDM.AT.WebHierarchyKey' && obj._) {
       // Split into an array and rejoin with commas (still as string)
       result[obj.AttributeID] = obj._;
     } else if (obj.AttributeID && obj.Value) {
@@ -60,11 +126,15 @@ function extractCategoryItems(
     const categoryItem = classificationObj[key];
 
     // Ensure MetaData exists and contains the 'PMDM.AT.LinkedGoldenRecords' attribute
+    
     if (categoryItem.MetaData) {
-      const metadata = extractMetaData(categoryItem.MetaData);
+      const metadata = extractItems(categoryItem.MetaData);
+      const eventStatus = extractEventType(categoryItem.MetaData);
+      const webKey = extractWebKey(categoryItem.MetaData);
       const linkedGoldenRecords = metadata['PMDM.AT.LinkedGoldenRecords'];
-      console.log;(metadata)
 
+      const inforStatus = eventStatus['PMDM.AT.InforStatus'];
+      const key = webKey['PMDM.AT.WebHierarchyKey'];
       // Only process items with a valid 'LinkedGoldenRecords' attribute
       if (linkedGoldenRecords) {
         const goldenRecordIds = linkedGoldenRecords.split(',')
@@ -74,18 +144,19 @@ function extractCategoryItems(
         const categoryName = resolveCategoryName(categoryItem.Name);
 
         const categoryItemJson = {
-          context: 'catalogs::categories::items',
+          context: CAT_ITEMS_CONTEXT,
           data: {
             items: goldenRecordIds,
-            key: categoryName || 'Unnamed Category',
-            recipientEmails: ['xxx@yyy.com'],
+            key: key,
+            //key: categoryItem.ID,
+            recipientEmails: DEFAULT_RECIPIENT_EMAILS,
           },
           dataFormatVersion: 0,
-          dataId: 'Unknown',
-          groupId: 'groupId',
-          notes: 'notes',
-          source: 'PIM',
-          type: payloadType,
+          dataId: categoryItem.ID,
+          groupId: categoryItem.groupId || '',
+          notes: categoryItem.notes || '',
+          source: DEFAULT_SRC,
+          type: inforStatus,
         };
 
         categoryItems.push(categoryItemJson);
