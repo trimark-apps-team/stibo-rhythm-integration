@@ -12,7 +12,7 @@ async function main() {
     const eventPayload = createCategoryEvent(); // or createCatalogEvent()
     const result = await sendEvent(eventPayload);
     console.log('✅ Event result:', result);
-  } catch (err) {
+  } catch (err: any) {
     console.error('❌ Failed to send event:', err.response?.data || err.message);
   }
 
