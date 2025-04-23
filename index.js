@@ -156,20 +156,45 @@ app.get('/process/productattributes/update', async (req, res) => {
 
 app.get('/process/productresource/update', async (req, res) => {
   try {
+
+    const config = {
+      tenantId: process.env.INFOR_TENANT_ID_TST,
+      secret: process.env.INFOR_ECOMM_ENRICHMENT_SECRET,
+      baseUrl: process.env.INFOR_ENRICHMENT_BASE_URL,
+      clientEmail: process.env.INFOR__ENRICHMENT_CLIENT_EMAIL
+    };
     const filePath = getLatestUploadedFile('ProductsEcommerce');
     const itemJson = await handleXmlFromFile(filePath, 'ProductData', true);
 
     // Wait for all resources to be prepared (downloaded, streamed, etc)
-    //we'll need to call the rhythm api inside this function when ready to send 
-    // file binaries of resources to rhythm
+    
     const productResources = await handleProductResourceUpdate(itemJson);
+    for (const resource of productResources) {
+      try {
+        const resourceType = resource.type;
+        const response = await makeInforRequest({
+          ...config,
+          urlPath: `/admin/resources/${resourceType}`,
+          method: 'POST',
+          data: resource.form,
+          headers: resource.form.getHeaders()
+        });
+
+        console.log('Result:', response);
+      } catch (err) {
+        console.error('Request failed:', err);
+      }
+    }
+
 
     // Now that resources are ready → create Rhythm payload
     const rhythmRequestBodies = handleProductResourceLinkUpdate(itemJson);
 
+
     res.json({
       preparedResources: productResources.map(resource => ({
         file: resource.file,
+        type: resource.type,
         headers: resource.headers
       })),
       rhythmRequestBodies
@@ -197,7 +222,7 @@ app.get('/process/productimage/update', async (req, res) => {
     for (const item of productImageRequestBodies) {
       try {
         
-        const itemNumber = item.keyvalue.value;
+        const itemNumber = item.keyvalue;
         const requestBody = item.imagePayload;
         const response = await makeInforRequest({
           ...config,

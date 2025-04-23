@@ -45,7 +45,7 @@ function handleProductAttributeUpdate(itemJson) {
     const productAttributeValues = products.map((product) => {
         return {
             "ID": product['ID'],
-            "itemID": product['KeyValue']['value'],
+            "itemID": product['KeyValue'],
             "name": product['Name'],
             ...product['Values']
         }
@@ -74,7 +74,7 @@ function handleProductAttributeUpdate(itemJson) {
     const dynamicAttributePayloads = itemAttributes.map((attributeBodies, i) => {
             return  {
                 'id':products[i]['ID'],
-                "itemID": products[i]['KeyValue']['value'],
+                "itemID": products[i]['KeyValue'],
                 "name": products[i]['Name'],
                 "dynamicAttributePayload": attributeBodies
             }
