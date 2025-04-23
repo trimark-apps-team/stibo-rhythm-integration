@@ -9,6 +9,7 @@
     "convert:categories": "ts-node src/cli/getCategoriesToFile.ts",
     "convert:category-items": "ts-node src/cli/getCategoryItemsToFile.ts",
     "save:category-items": "ts-node src/cli/saveCategoryItems.ts",
+    "save:categories": "ts-node src/cli/saveCategories.ts",
     "send": "ts-node src/cli/index.ts",
     "test": "jest --config jest.config.ts"
   },

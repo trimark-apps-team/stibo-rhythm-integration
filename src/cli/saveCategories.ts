@@ -4,9 +4,9 @@ import { EventPayload } from '../types'; // assuming you have this type
 import { EVENT_URL } from '../constants';
 import { sendEvent } from '../eventService';
 
-const jsonPath = path.resolve(__dirname, '../dist/category-items-output.json');
+const jsonPath = path.resolve(__dirname, '../dist/categories-output.json');
 
-type CategoryItem = {
+type Category = {
   id: string;
   name: string;
   [key: string]: any;
@@ -18,7 +18,7 @@ type CategoryItem = {
   type: string;
 };
 
-function readJsonFile(filePath: string): CategoryItem[] {
+function readJsonFile(filePath: string): Category[] {
   const rawData = fs.readFileSync(filePath, 'utf-8');
   const parsed = JSON.parse(rawData);
   if (!Array.isArray(parsed)) {
@@ -34,8 +34,9 @@ async function sendToApi(payload: EventPayload, index: number): Promise<void> {
     console.log(payload);
     
     // UNCOMMENT / COMMENT THIS
-    const res = await sendEvent(payload);
-    console.log(`✅ [${index}] Success: ${res.status}`);
+    // test this
+    //const res = await sendEvent(payload);
+    //console.log(`✅ [${index}] Success: ${res.status}`);
   } catch (err: any) {
     console.error(`❌ [${index}] Failed: ${err.message}`);
   }
@@ -48,11 +49,7 @@ async function main() {
 
     await Promise.all(
       items.map((item, index) => {
-
-        // TURN OFF CONDITION AND JUST RETURN
-        //if (index === 4) {
           return sendToApi(item, index);
-        //}
       })
     );
 

@@ -1,12 +1,14 @@
 import path from 'path';
 import fs from 'fs';
 import xml2js from 'xml2js'; // Import the XML parsing library
-import getCategoryItems from '../services/convertPimCategoryItems';
+
 import convertPimCategoryItems from '../services/convertPimCategoryItems';
+import { getLatestUploadedFile } from '../utils/getLatestUploadedFile';
 import { PayloadType } from '../types';
 
 async function main(): Promise<void> {
-  const filePath = path.resolve('uploads', 'WebClassification', 'WebHierarchy-Catalog-2025-04-03_13.26.20.xml');
+  const filePath = getLatestUploadedFile('WebClassification');
+  //const filePath = path.resolve('uploads', 'WebClassification', 'WebHierarchy-Catalog-2025-04-03_13.26.20.xml');
   const outputFile = path.join(__dirname, '..', 'dist', 'category-items-output.json');
   
   const payloadType: PayloadType = 'Created'; // You can adjust this dynamically if needed

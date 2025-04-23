@@ -2,9 +2,10 @@ import path from 'path';
 import fs from 'fs';
 import xml2js from 'xml2js'; // Import the XML parsing library
 import getCategories from '../services/convertPimCategories';
+import { getLatestUploadedFile } from '../utils/getLatestUploadedFile';
 
 async function main() {
-  const filePath = path.resolve('uploads', 'WebClassification', 'WebHierarchy-Catalog-2025-04-03_13.26.20.xml');
+  const filePath = getLatestUploadedFile('WebClassification');
   const outputFile = path.join(__dirname, '..', 'dist', 'categories-output.json');
 
   try {

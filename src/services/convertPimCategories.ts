@@ -1,29 +1,34 @@
 type PayloadType = 'Created' | 'Updated' | 'Deleted';
+import { DEFAULT_RECIPIENT_EMAILS } from '../constants';
 
 interface MetaDataItem {
   AttributeID: string;
-  Value: string;
+  Value?: string;
+  _: string; // <-- this is the real value field in your structure
+  Derived?: string;
 }
 
 interface ClassificationNode {
   Name?: { _: string } | string;
-  MetaData?: MetaDataItem[];
+  MetaData?: { Value: MetaDataItem[] };
   Classification?: Record<string, ClassificationNode>;
 }
 
-// Extract metadata into a flat object
-function extractMetaData(meta: MetaDataItem[] = []): Record<string, string> {
-    if (!Array.isArray(meta)) {
-      console.warn('MetaData is not an array:', meta);
-      return {};  // If meta is not an array, return an empty object
-    }
-  
-    return meta.reduce((acc, { AttributeID, Value }) => {
-      acc[AttributeID] = Value;
-      return acc;
-    }, {} as Record<string, string>);
+function extractMetaData(metaWrapper?: { Value: MetaDataItem[] }): Record<string, string> {
+  if (!metaWrapper || !Array.isArray(metaWrapper.Value)) {
+    console.warn('MetaData.Value is not an array:', metaWrapper);
+    return {};
   }
-  
+
+  return metaWrapper.Value.reduce((acc, item) => {
+    const key = item.AttributeID;
+    const value = typeof item._ === 'string' ? item._ : item.Value || '';
+    if (key) {
+      acc[key] = value;
+    }
+    return acc;
+  }, {} as Record<string, string>);
+}
 
 // Normalize name whether it's a string or { _: string }
 function resolveCategoryName(name: any): string {
@@ -51,6 +56,10 @@ function extractCategories(
   
       const metadata = extractMetaData(category.MetaData);
   
+
+      console.log('METADATA');
+console.log(metadata);
+
       // Resolve category name
       const categoryName = resolveCategoryName(category.Name);
   
@@ -68,14 +77,14 @@ function extractCategories(
               longDescription: metadata['PMDM.AT.PageTitle'] || 'No Title',
             },
           ],
-          recipientEmails: ['xxxxx@yyyy.com'], // Replace this if needed
+          recipientEmails: DEFAULT_RECIPIENT_EMAILS,
         },
         dataFormatVersion: 0,
         dataId: 'dataId',
         groupId: 'groupId',
         notes: 'notes',
         source: 'PIM',
-        type: payloadType,
+        type: metadata['PMDM.AT.InforStatus'],
       };
   
       categories.push(categoryJson);
@@ -88,6 +97,7 @@ function extractCategories(
   
     console.log("categories");
     console.log(categories);
+ 
   
     return categories;
   }
@@ -97,8 +107,7 @@ function extractCategories(
 export default function convertPimCategories(itemJson: any, payloadType: PayloadType = 'Created') {
     // Log the entire input to check the structure
     //console.log("Item JSON:", JSON.stringify(itemJson, null, 2)); // Log the entire input JSON for debugging
-  
-console.log(itemJson);
+
 
     // Check if STEP-ProductInformation and Classifications are present
     const rootClassifications = itemJson?.Classification;
