@@ -1,7 +1,5 @@
 import fs from 'fs';
 import path from 'path';
-//import axios from 'axios';
-//import { saveCategoryEvent } from '../events/taxonomy/saveCategoryEvent'; // adjust path if needed
 import { EventPayload } from '../types'; // assuming you have this type
 import { EVENT_URL } from '../constants';
 import { sendEvent } from '../eventService';
@@ -52,9 +50,9 @@ async function main() {
       items.map((item, index) => {
 
         // TURN OFF CONDITION AND JUST RETURN
-        if (index === 4) {
+        //if (index === 4) {
           return sendToApi(item, index);
-        }
+        //}
       })
     );
 

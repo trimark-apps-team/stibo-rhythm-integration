@@ -107,7 +107,6 @@ function extractWebKey(
   return result;
 }
 
-
 // Helper function to normalize category name whether it's a string or { _: string }
 function resolveCategoryName(name: any): string {
   return typeof name === 'object' && name._ ? name._ : name || 'Unnamed Category';
@@ -141,14 +140,15 @@ function extractCategoryItems(
           .map((s: string) => s.trim())
           .filter(Boolean);
 
-        const categoryName = resolveCategoryName(categoryItem.Name);
+        // May need this later
+        // const categoryName = resolveCategoryName(categoryItem.Name);
 
         const categoryItemJson = {
           context: CAT_ITEMS_CONTEXT,
           data: {
             items: goldenRecordIds,
-            key: key,
-            //key: categoryItem.ID,
+            //key: key,
+            key: categoryItem.ID,
             recipientEmails: DEFAULT_RECIPIENT_EMAILS,
           },
           dataFormatVersion: 0,

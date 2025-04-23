@@ -14,5 +14,8 @@ export async function getAccessToken(): Promise<string> {
   });
 
   const response = await axios.post(AUTH_URL, authData);
+  
+  console.log(response);
+
   return response.data.access_token;
 }
