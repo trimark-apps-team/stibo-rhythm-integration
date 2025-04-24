@@ -154,58 +154,82 @@ app.get('/process/productattributes/update', async (req, res) => {
   }
 });
 
-app.get('/process/productresource/update', async (req, res) => {
+app.get('/process/productresource/delete', async (req, res) => {
   try {
-
     const config = {
       tenantId: process.env.INFOR_TENANT_ID_TST,
       secret: process.env.INFOR_ECOMM_ENRICHMENT_SECRET,
       baseUrl: process.env.INFOR_ENRICHMENT_BASE_URL,
       clientEmail: process.env.INFOR__ENRICHMENT_CLIENT_EMAIL
     };
+
     const filePath = getLatestUploadedFile('ProductsEcommerce');
     const itemJson = await handleXmlFromFile(filePath, 'ProductData', true);
+    const rhythmRequestBodies = handleProductResourceLinkUpdate(itemJson);
 
-    // Wait for all resources to be prepared (downloaded, streamed, etc)
-    
-    const productResources = await handleProductResourceUpdate(itemJson);
-    for (const resource of productResources) {
+    for (const resource of rhythmRequestBodies) {
       try {
+        const itemNumber = resource.keyvalue;
+        const resourceURL = resource.resourceURL;
         const resourceType = resource.type;
-        const response = await makeInforRequest({
+
+        
+        const deleteresponse = await makeInforRequest({
           ...config,
-          urlPath: `/admin/resources/${resourceType}`,
-          method: 'POST',
-          data: resource.form,
-          headers: resource.form.getHeaders()
+          urlPath: `/admin/items/${itemNumber}/resources/${resourceURL}/${resourceType}`,
+          method: 'DELETE'
         });
 
-        console.log('Result:', response);
+        console.log('Delete Result:', deleteresponse);
       } catch (err) {
-        console.error('Request failed:', err);
+        console.error('Delete request failed:', err);
       }
     }
 
+    res.json({ message: 'Delete operations complete', count: rhythmRequestBodies.length });
 
-    // Now that resources are ready → create Rhythm payload
-    const rhythmRequestBodies = handleProductResourceLinkUpdate(itemJson);
-
-
-    res.json({
-      preparedResources: productResources.map(resource => ({
-        file: resource.file,
-        type: resource.type,
-        headers: resource.headers
-      })),
-      rhythmRequestBodies
-    });
-
-  } catch(error) {
-    console.error('Error processing product resource update:', error);
+  } catch (error) {
+    console.error('Error during product resource deletion:', error);
     res.status(500).send('Internal Server Error');
   }
 });
 
+app.get('/process/productresource/update', async (req, res) => {
+  try {
+    const config = {
+      tenantId: process.env.INFOR_TENANT_ID_TST,
+      secret: process.env.INFOR_ECOMM_ENRICHMENT_SECRET,
+      baseUrl: process.env.INFOR_ENRICHMENT_BASE_URL,
+      clientEmail: process.env.INFOR__ENRICHMENT_CLIENT_EMAIL
+    };
+
+    const filePath = getLatestUploadedFile('ProductsEcommerce');
+    const itemJson = await handleXmlFromFile(filePath, 'ProductData', true);
+    const rhythmRequestBodies = handleProductResourceLinkUpdate(itemJson);
+
+    for (const resource of rhythmRequestBodies) {
+      try {
+        const itemNumber = resource.keyvalue;
+        const response = await makeInforRequest({
+          ...config,
+          urlPath: `/admin/items/${itemNumber}/resources`,
+          method: 'POST',
+          data: resource.resourcePayload
+        });
+
+        console.log('Update Result:', response);
+      } catch (err) {
+        console.error('Update request failed:', err);
+      }
+    }
+
+    res.json({ message: 'Update operations complete', count: rhythmRequestBodies });
+
+  } catch (error) {
+    console.error('Error during product resource update:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
 
 app.get('/process/productimage/update', async (req, res) => {
   try {
