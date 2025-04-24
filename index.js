@@ -16,7 +16,6 @@ const handleCategoryItems = require('./utils/taxonomy/handleCategoryItems');
 const handleAttributeUpdate = require('./utils/handleAttributeUpdate');
 const handleWebCategoryUpdate = require('./utils/handleWebCatagoryUpdate');
 const handleProductAttributeUpdate = require('./utils/products/handleProductAttributeUpdate')
-const handleProductResourceUpdate = require('./utils/products/handleProductResourceUpdate')
 const handleProductResourceLinkUpdate = require('./utils/products/handleProductResourceLinkUpdate')
 
 // App setup
@@ -154,7 +153,8 @@ app.get('/process/productattributes/update', async (req, res) => {
   }
 });
 
-app.get('/process/productresource/delete', async (req, res) => {
+
+app.get('/process/productresource/refresh', async (req, res) => {
   try {
     const config = {
       tenantId: process.env.INFOR_TENANT_ID_TST,
@@ -166,67 +166,77 @@ app.get('/process/productresource/delete', async (req, res) => {
     const filePath = getLatestUploadedFile('ProductsEcommerce');
     const itemJson = await handleXmlFromFile(filePath, 'ProductData', true);
     const rhythmRequestBodies = handleProductResourceLinkUpdate(itemJson);
+    const results = [];
+    const groupedResources = {};
 
     for (const resource of rhythmRequestBodies) {
-      try {
-        const itemNumber = resource.keyvalue;
-        const resourceURL = resource.resourceURL;
-        const resourceType = resource.type;
-
-        
-        const deleteresponse = await makeInforRequest({
-          ...config,
-          urlPath: `/admin/items/${itemNumber}/resources/${resourceURL}/${resourceType}`,
-          method: 'DELETE'
-        });
-
-        console.log('Delete Result:', deleteresponse);
-      } catch (err) {
-        console.error('Delete request failed:', err);
+      const itemNumber = resource.keyvalue;
+      if (!groupedResources[itemNumber]) {
+        groupedResources[itemNumber] = [];
       }
+      groupedResources[itemNumber].push(resource);
     }
 
-    res.json({ message: 'Delete operations complete', count: rhythmRequestBodies.length });
+    for (const itemNumber in groupedResources) {
+      console.log(`\n--- Processing item ${itemNumber} ---`);
+      const itemResources = groupedResources[itemNumber];
 
-  } catch (error) {
-    console.error('Error during product resource deletion:', error);
-    res.status(500).send('Internal Server Error');
-  }
-});
-
-app.get('/process/productresource/update', async (req, res) => {
-  try {
-    const config = {
-      tenantId: process.env.INFOR_TENANT_ID_TST,
-      secret: process.env.INFOR_ECOMM_ENRICHMENT_SECRET,
-      baseUrl: process.env.INFOR_ENRICHMENT_BASE_URL,
-      clientEmail: process.env.INFOR__ENRICHMENT_CLIENT_EMAIL
-    };
-
-    const filePath = getLatestUploadedFile('ProductsEcommerce');
-    const itemJson = await handleXmlFromFile(filePath, 'ProductData', true);
-    const rhythmRequestBodies = handleProductResourceLinkUpdate(itemJson);
-
-    for (const resource of rhythmRequestBodies) {
       try {
-        const itemNumber = resource.keyvalue;
-        const response = await makeInforRequest({
+        // GET existing resources once
+        const getResponse = await makeInforRequest({
           ...config,
           urlPath: `/admin/items/${itemNumber}/resources`,
-          method: 'POST',
-          data: resource.resourcePayload
+          method: 'GET'
         });
 
-        console.log('Update Result:', response);
+        const existingResources = getResponse || [];
+        console.log('existing resources', existingResources);
+
+        // DELETE existing resources once
+        for (const r of existingResources) {
+          const encodedUrl = encodeURIComponent(r.url);
+          const type = r.type;
+
+          try {
+            await makeInforRequest({
+              ...config,
+              urlPath: `/admin/items/${itemNumber}/resources/${encodedUrl}/${type}`,
+              method: 'DELETE'
+            });
+            console.log(`✔ Deleted: ${r.name} (${type})`);
+          } catch (deleteErr) {
+            console.warn(`⚠ Failed to delete ${r.name} (${type}):`, deleteErr.message);
+          }
+        }
+
+        // POST all new resources for the item
+        for (const resource of itemResources) {
+          try {
+            await makeInforRequest({
+              ...config,
+              urlPath: `/admin/items/${itemNumber}/resources`,
+              method: 'POST',
+              data: resource.resourcePayload
+            });
+            console.log(`✅ Posted: ${resource.resourcePayload.name}`);
+          } catch (postErr) {
+            console.error(`❌ Failed to post resource: ${resource.resourcePayload.name}`, postErr.message);
+          }
+        }
+
+        results.push({ itemNumber, status: 'Refreshed' });
+
       } catch (err) {
-        console.error('Update request failed:', err);
+        console.error(`❌ Error processing ${itemNumber}:`, err.message);
+        results.push({ itemNumber, status: 'Error', error: err.message });
       }
     }
 
-    res.json({ message: 'Update operations complete', count: rhythmRequestBodies });
+    // Send results back to the client
+    res.send({ label: "Refresh Results", data: results });
 
   } catch (error) {
-    console.error('Error during product resource update:', error);
+    console.error('Error processing product resources:', error);
     res.status(500).send('Internal Server Error');
   }
 });

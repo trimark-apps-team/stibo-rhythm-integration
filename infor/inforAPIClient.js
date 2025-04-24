@@ -24,19 +24,19 @@ function generateInforToken({ tenantId, secret, clientEmail, fullUrl, method, bo
     const token = `${tenantId}:${hmac}`;
 
     // ADD LOGS HERE
-    console.log('\n=== Infor Rhythm API Request ===');
-    console.log(`Full URL       : ${fullUrl}`);
-    console.log(`Method         : ${method.toUpperCase()}`);
-    console.log(`Body (Raw)     : ${typeof body !== 'undefined' ? body : '[not defined]'}`);
-    console.log(`Body SHA256    : ${typeof hashBody !== 'undefined' ? (hashBody === '' ? '[empty line]' : hashBody) : '[not defined]'}`);
+    // console.log('\n=== Infor Rhythm API Request ===');
+    // console.log(`Full URL       : ${fullUrl}`);
+    // console.log(`Method         : ${method.toUpperCase()}`);
+    // console.log(`Body (Raw)     : ${typeof body !== 'undefined' ? body : '[not defined]'}`);
+    // console.log(`Body SHA256    : ${typeof hashBody !== 'undefined' ? (hashBody === '' ? '[empty line]' : hashBody) : '[not defined]'}`);
 
-    console.log('\nSignature String:');
-    console.log('------------------');
-    console.log(signatureString);
-    console.log('------------------');
+    // console.log('\nSignature String:');
+    // console.log('------------------');
+    // console.log(signatureString);
+    // console.log('------------------');
 
-    console.log(`Generated AuthToken : ${token}`);
-    console.log(`Timestamp           : ${timestamp}`);
+    // console.log(`Generated AuthToken : ${token}`);
+    // console.log(`Timestamp           : ${timestamp}`);
   
     return { token, timestamp };
 }
