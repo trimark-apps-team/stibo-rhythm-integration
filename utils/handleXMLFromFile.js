@@ -1,5 +1,5 @@
-const { readFile } = require('fs');
-const { parseString } = require('xml2js');
+import { readFile } from 'fs';
+import { parseString } from 'xml2js';
 
 function transformAttributeLink(attributeLinkObj) {
   if (!attributeLinkObj) return {};
@@ -94,7 +94,7 @@ function flattenXmlJson(obj) {
 
   return flat;
 }
-function handleXmlFromFile(filePath, label, flatten) {
+export default function handleXmlFromFile(filePath, label, flatten) {
   return new Promise((resolve, reject) => {
     readFile(filePath, 'utf8', (err, xmlData) => {
       if (err) return reject(err);
@@ -106,5 +106,3 @@ function handleXmlFromFile(filePath, label, flatten) {
     });
   });
 }
-
-module.exports = handleXmlFromFile;

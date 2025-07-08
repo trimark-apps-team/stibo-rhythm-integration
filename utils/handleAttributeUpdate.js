@@ -1,4 +1,4 @@
-function handleAttributeUpdate(attributeJson) {
+export default function handleAttributeUpdate(attributeJson) {
     const attributeArray = Object.values(attributeJson["data"]["STEP-ProductInformation"].AttributeList.Attribute);
     const attributesBodyRequests = attributeArray.map((attribute) => {
         return {
@@ -16,5 +16,3 @@ function handleAttributeUpdate(attributeJson) {
     })
     return attributesBodyRequests;
 }
-
-module.exports = handleAttributeUpdate;

@@ -1,4 +1,4 @@
-function handleWebCategoryUpdate(itemJson) {
+export default function handleWebCategoryUpdate(itemJson) {
     // Extract the category data from the correct path
     const categoryArray = Object.values(itemJson["data"]["STEP-ProductInformation"].Classifications.Classification);
 
@@ -65,4 +65,3 @@ function handleWebCategoryUpdate(itemJson) {
     return allCategories;
 }
 
-module.exports = handleWebCategoryUpdate;

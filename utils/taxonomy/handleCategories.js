@@ -1,4 +1,4 @@
-function handleCategories(itemJson, payloadType) {
+export default function handleCategories(itemJson, payloadType) {
     // Extract the category data from the correct path
     const categoryArray = Object.values(itemJson["data"]["STEP-ProductInformation"].Classifications.Classification);
 
@@ -65,4 +65,3 @@ function handleCategories(itemJson, payloadType) {
     return allCategories;
 }
 
-module.exports = handleCategories;

@@ -1,7 +1,7 @@
-const crypto = require('crypto');
-const axios = require('axios');
+import crypto from 'crypto';
+import axios from 'axios';
 
-function generateInforToken({ tenantId, secret, clientEmail, fullUrl, method, body }) {
+export function generateInforToken({ tenantId, secret, clientEmail, fullUrl, method, body }) {
     const timestamp = Date.now().toString();
   
     const hashBody = method.toUpperCase() === 'GET' || method.toUpperCase() === 'DELETE' || !body
@@ -41,7 +41,7 @@ function generateInforToken({ tenantId, secret, clientEmail, fullUrl, method, bo
     return { token, timestamp };
 }
 
-async function makeInforRequest({ tenantId, secret, baseUrl, urlPath, method = 'POST', data = {}, clientEmail }) {
+export async function makeInforRequest({ tenantId, secret, baseUrl, urlPath, method = 'POST', data = {}, clientEmail }) {
   const fullUrl = `${baseUrl}${urlPath}`;
   const hasBody = Object.keys(data || {}).length > 0;
   const upperMethod = method.toUpperCase();
@@ -80,7 +80,3 @@ async function makeInforRequest({ tenantId, secret, baseUrl, urlPath, method = '
   }
 }
 
-module.exports = {
-  generateInforToken,
-  makeInforRequest
-};

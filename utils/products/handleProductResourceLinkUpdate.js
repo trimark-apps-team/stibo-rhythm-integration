@@ -1,7 +1,7 @@
-const path = require('path');
-const mime = require('mime-types');
+import path from 'path';
+import mime from 'mime-types';
 
-function handleProductResourceLinkUpdate(itemJson) {
+export default function handleProductResourceLinkUpdate(itemJson) {
     const productsArray = Object.values(itemJson["data"]["STEP-ProductInformation"].Products.Product);
 
     const productResources = productsArray.flatMap(product => {
@@ -63,5 +63,3 @@ function handleProductResourceLinkUpdate(itemJson) {
 
     return rhythmRequestBodies;
 }
-
-module.exports = handleProductResourceLinkUpdate;

@@ -1,4 +1,4 @@
-function handleCatalogCreate({ data }, payloadType) {
+export default function handleCatalogCreate({ data }, payloadType) {
   const rootClassification =
     data?.['STEP-ProductInformation']?.Classifications?.Classification?.Rhythm;
 
@@ -67,4 +67,3 @@ function handleCatalogCreate({ data }, payloadType) {
   return jsonResult;
 }
 
-module.exports = handleCatalogCreate;

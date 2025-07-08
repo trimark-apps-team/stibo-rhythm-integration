@@ -1,4 +1,4 @@
-function handleProductImageUpdate(itemJson) {
+export default function handleProductImageUpdate(itemJson) {
     const productsArray = Object.values(itemJson["data"]["STEP-ProductInformation"].Products.Product);
   
     const productImages = productsArray.flatMap(product => {
@@ -32,4 +32,3 @@ function handleProductImageUpdate(itemJson) {
     return rhythmRequestBodies;
   }
   
-  module.exports = handleProductImageUpdate

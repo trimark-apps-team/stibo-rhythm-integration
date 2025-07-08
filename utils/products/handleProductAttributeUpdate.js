@@ -33,7 +33,7 @@ function mapValuesToAttributeLinks(valuesArray, attributeLinkArray) {
     return mappedResults;
   }
 
-function handleProductAttributeUpdate(itemJson) {
+export default function handleProductAttributeUpdate(itemJson) {
     const products = Object.values(itemJson["data"]["STEP-ProductInformation"].Products.Product);
 
 
@@ -89,4 +89,3 @@ function handleProductAttributeUpdate(itemJson) {
 
 }
 
-module.exports = handleProductAttributeUpdate;

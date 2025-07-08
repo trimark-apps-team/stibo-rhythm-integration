@@ -1,8 +1,8 @@
-const fs = require('fs');
-const { DOMParser } = require('xmldom');
+import fs from 'fs';
+import { DOMParser } from 'xmldom';
 
 // Function to handle XML file reading and transformation
-async function handleCategoryItems(filePath, outputName, payloadType) {
+export default async function handleCategoryItems(filePath, outputName, payloadType) {
     try {
         const xmlString = fs.readFileSync(filePath, 'utf-8');
         const itemJson = parseXmlToWebsiteCategories(xmlString, payloadType);
@@ -78,4 +78,4 @@ function parseXmlToWebsiteCategories(xmlString, payloadType) {
     return categories;
 }
 
-module.exports = handleCategoryItems;
+
