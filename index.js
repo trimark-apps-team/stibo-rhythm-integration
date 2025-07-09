@@ -1,11 +1,10 @@
 import dotenv from 'dotenv';
 dotenv.config();
-import SftpClient from 'ssh2-sftp-client';
 import axios from 'axios';
 import path from 'path';
 import { makeInforRequest } from './infor/inforAPIClient.js';
-import getLatestRemoteFile from './utils/uploads/getLatestRemoteFile.js';
-import handleXmlFromFile from './utils/handleXmlFromFile.js';
+import getLatestS3File from './utils/uploads/getLatestS3File.js';
+import handleXmlFromString from './utils/handleXMLFromString.js';
 import handleProductImageUpdate from './utils/products/handleProductImageUpdate.js';
 import handleCategories from './utils/taxonomy/handleCategories.js';
 import handleCatalogCreate from './utils/taxonomy/handleCatalog.js';
@@ -15,49 +14,118 @@ import handleWebCategoryUpdate from './utils/handleWebCatagoryUpdate.js';
 import handleProductAttributeUpdate from './utils/products/handleProductAttributeUpdate.js';
 import handleProductResourceLinkUpdate from './utils/products/handleProductResourceLinkUpdate.js';
 import streamToString from './utils/streamToString.js';
+import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 
 
 export const handler = async (event) => {
-  const sftp = new SftpClient();
-
-  // set as environment variables in Lambda
-  const config = {
-    host: process.env.SFTP_HOST,
-    port: process.env.SFTP_PORT || 22,
-    username: process.env.SFTP_USERNAME,
-    password: process.env.SFTP_PASSWORD,
-  };
-
-  // Remote directory to check for files
-  const remoteDir = process.env.SFTP_REMOTE_DIR;
-
   try {
-    await sftp.connect(config);
 
-    const latestFilePath = await getLatestRemoteFile(sftp, remoteDir);
-    console.log('Latest file to process:', latestFilePath);
+    const s3Client = new S3Client({
+      region: process.env.S3_REGION,
+      credentials: {
+        accessKeyId: process.env.S3_ACCESS_KEY,
+        secretAccessKey: process.env.S3_SECRET,
+      },
+    });
+    const latestFileKey = await getLatestS3File(s3Client, process.env.S3_BUCKET, process.env.S3_PREFIX);
+    console.log("Latest file to process:", latestFileKey);
 
-    const fileBuffer = await sftp.get(latestFilePath);
-    const fileContent = await streamToString(fileBuffer);
+    const getObjectParams = {
+      Bucket: process.env.S3_BUCKET,
+      Key: latestFileKey,
+    };
 
-    console.log('File content:', fileContent);
+    const s3Object = await s3Client.send(new GetObjectCommand(getObjectParams));
+    const fileContent = await streamToString(s3Object.Body);
+
+    //console.log("File content:", fileContent);
 
     // Add your XML parsing and processing logic here using fileContent
+    const filename = latestFileKey.split('/').pop();
 
-    await sftp.end();
+    switch (true) {
+      case filename.includes('Product'):
+        console.log(`Handle Product file: ${filename}`);
+        // Your Product file processing logic here
+        try {
+          const processedData = await handleXmlFromString(fileContent, "Products", true);
+      
+          console.log("Processed data:", processedData);
+      
+          // further processing or returning processedData
+        } catch (err) {
+          console.error("Error:", err);
+          // error handling
+        }
+        break;
+
+      case filename.includes('Attributes'):
+        console.log(`Handle Attributes file: ${filename}`);
+        try {
+          const config = {
+            tenantId: process.env.INFOR_TENANT_ID_TST,
+            secret: process.env.INFOR_ECOMM_ENRICHMENT_SECRET,
+            baseUrl: process.env.INFOR_ENRICHMENT_BASE_URL,
+            clientEmail: process.env.INFOR__ENRICHMENT_CLIENT_EMAIL
+          };
+          const processedData = await handleXmlFromString(fileContent, "Attributes", true);
+          const attributeRequestBodies = handleAttributeUpdate(processedData);
+      
+          console.log("Processed data:", processedData);
+      
+          // further processing or returning processedData
+          for (const attributeRequestBody of attributeRequestBodies) {
+            try {
+             
+              const response = await makeInforRequest({
+                ...config,
+                urlPath: '/admin/attributes', 
+                method: 'PUT',
+                data: attributeRequestBody
+              });
+      
+              console.log('Result:', response);
+            } catch (err) {
+              console.error('Request failed:', err);
+            }
+          }
+          console.log(attributeRequestBodies);
+        
+        } catch (error) {
+          console.error('Error processing attribute update:', error);
+          throw error;
+        }
+        break;
+
+      case filename.includes('Webclassification'):
+        console.log(`Handle Webclassification file: ${filename}`);
+        try {
+          const processedData = await handleXmlFromString(fileContent, "Webclassification", true);
+      
+          console.log("Processed data:", processedData);
+      
+          // further processing or returning processedData
+
+        } catch (err) {
+          console.error("Error:", err);
+          // error handling
+        }
+        break;
+
+      default:
+        console.log(`Unknown file type, no specific handler for: ${filename}`);
+        // Optional default logic
+    }
 
     return {
       statusCode: 200,
-      body: 'File downloaded and processed successfully',
+      body: "File downloaded and processed successfully",
     };
   } catch (error) {
-    console.error('Error processing file:', error);
-    try {
-      await sftp.end();
-    } catch {}
+    console.error("Error processing file:", error);
     return {
       statusCode: 500,
-      body: 'Error processing file',
+      body: `Error processing file: ${error.message}`,
     };
   }
 };

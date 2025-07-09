@@ -1,4 +1,3 @@
-import { readFile } from 'fs';
 import { parseString } from 'xml2js';
 
 function transformAttributeLink(attributeLinkObj) {
@@ -94,15 +93,12 @@ function flattenXmlJson(obj) {
 
   return flat;
 }
-export default function handleXmlFromFile(filePath, label, flatten) {
+export default function handleXmlFromString(xmlString, label, flatten) {
   return new Promise((resolve, reject) => {
-    readFile(filePath, 'utf8', (err, xmlData) => {
+    parseString(xmlString, { explicitArray: false }, (err, jsonData) => {
       if (err) return reject(err);
-      parseString(xmlData, { explicitArray: false }, (err, jsonData) => {
-        if (err) return reject(err);
-        const flatJson = flatten ? flattenXmlJson(jsonData) : jsonData;
-        resolve({ label, data: flatJson });
-      });
+      const flatJson = flatten ? flattenXmlJson(jsonData) : jsonData;
+      resolve({ label, data: flatJson });
     });
   });
 }
