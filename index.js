@@ -3,7 +3,8 @@ dotenv.config();
 import axios from 'axios';
 import path from 'path';
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
-
+import getCategories from './utils/convertPimCategories.js';
+import xml2js from 'xml2js';
 import buildConfig from './utils/buildConfig.js';
 import { makeInforRequest } from './infor/inforAPIClient.js';
 import getLatestS3File from './utils/uploads/getLatestS3File.js';
@@ -17,7 +18,7 @@ import streamToString from './utils/streamToString.js';
 import processProductAttributes from './utils/products/processProductAttributes.js';
 import processProductImages from './utils/products/processProductImages.js';
 import processProductResources from './utils/products/processProductResources.js';
-
+import { generateGenericRhythmToken } from './utils/generateGenericRhythmToken.js';
 
 
 export const handler = async (event) => {
@@ -30,7 +31,11 @@ export const handler = async (event) => {
         secretAccessKey: process.env.S3_SECRET,
       },
     });
-    const latestFileKey = await getLatestS3File(s3Client, process.env.S3_BUCKET, process.env.S3_PREFIX);
+
+    const fileNameType = "";
+    //const fileNameType = "WebClassification";
+
+    const latestFileKey = await getLatestS3File(s3Client, process.env.S3_BUCKET, process.env.S3_PREFIX, fileNameType);
     console.log("Latest file to process:", latestFileKey);
 
     const getObjectParams = {
@@ -40,7 +45,6 @@ export const handler = async (event) => {
 
     const s3Object = await s3Client.send(new GetObjectCommand(getObjectParams));
     const fileContent = await streamToString(s3Object.Body);
-
     //console.log("File content:", fileContent);
 
     // Add your XML parsing and processing logic here using fileContent
@@ -96,19 +100,33 @@ export const handler = async (event) => {
         }
         break;
 
-      case filename.includes('Webclassification'):
+      case filename.includes('WebClassification'):
         console.log(`Handle Webclassification file: ${filename}`);
+       
         try {
-          const processedData = await handleXmlFromString(fileContent, "Webclassification", true);
-      
+          const tokenData = await generateGenericRhythmToken();
+          console.log('Access Token:', tokenData.access_token);
+        
+          // Parse XML using xml2js directly
+          const parser = new xml2js.Parser({ explicitArray: false, mergeAttrs: true });
+          const processedData = await parser.parseStringPromise(fileContent);
           console.log("Processed data:", processedData);
-      
-          // further processing or returning processedData
+          const classifications = processedData['STEP-ProductInformation']?.Classifications?.Classification;
 
+          if (!classifications) {
+            throw new Error('No valid classification data found in the input...');
+          }
+      
+          const payloadType = 'Created';
+      
+          const categories = getCategories(classifications, payloadType);
+      console.log(categories);
+          console.log(categories);
+          // You can now work with processedData just like with handleXmlFromString
         } catch (err) {
           console.error("Error:", err);
-          // error handling
         }
+        
         break;
 
       default:
