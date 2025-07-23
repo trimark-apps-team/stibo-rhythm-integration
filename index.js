@@ -1,5 +1,4 @@
 import loadEnvIfLocal from './utils/loadEnvIfLocal.js';
-await loadEnvIfLocal();
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import getCategories from './utils/convertPimCategories.js';
 import xml2js from 'xml2js';
@@ -16,6 +15,7 @@ import { generateGenericRhythmToken } from './utils/generateGenericRhythmToken.j
 
 
 export const handler = async (event) => {
+  await loadEnvIfLocal();
   try {
 
     const s3Client = new S3Client({

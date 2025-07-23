@@ -1,5 +1,5 @@
 import axios from 'axios';
-import loadEnvIfLocal from './utils/loadEnvIfLocal.js';
+import loadEnvIfLocal from '../utils/loadEnvIfLocal.js';
 await loadEnvIfLocal();
 
 export async function generateGenericRhythmToken() {

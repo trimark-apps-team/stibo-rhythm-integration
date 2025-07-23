@@ -41,11 +41,14 @@ export function generateInforToken({ tenantId, secret, clientEmail, fullUrl, met
     return { token, timestamp };
 }
 
-export async function makeInforRequest({ tenantId, secret, baseUrl, urlPath, method = 'POST', data = {}, clientEmail }) {
+export async function makeInforRequest({ tenantId, secret, baseUrl, urlPath, method = "POST", data = {}, clientEmail }) {
   const fullUrl = `${baseUrl}${urlPath}`;
-  const hasBody = Object.keys(data || {}).length > 0;
   const upperMethod = method.toUpperCase();
-  const body = (['GET', 'DELETE'].includes(upperMethod) && !hasBody) ? '' : JSON.stringify(data);
+  const hasBody = Object.keys(data || {}).length > 0;
+
+  const body = (["GET", "DELETE"].includes(upperMethod) && !hasBody)
+    ? ""
+    : JSON.stringify(data);
 
   const { token, timestamp } = generateInforToken({
     tenantId,
@@ -53,30 +56,53 @@ export async function makeInforRequest({ tenantId, secret, baseUrl, urlPath, met
     clientEmail,
     fullUrl,
     method: upperMethod,
-    body
+    body,
   });
 
   const headers = {
-    'Content-Type': 'application/json',
-    'From': clientEmail,
-    'AuthToken': token,
-    'Timestamp': timestamp
+    "Content-Type": "application/json",
+    "From": clientEmail,
+    "AuthToken": token,
+    "Timestamp": timestamp,
   };
 
-  try {
-    const response = await axios({
-      method: upperMethod,
-      baseURL: baseUrl,
-      url: urlPath,
-      headers,
-      ...(upperMethod === 'GET' && hasBody ? { data } : {}),
-      ...(upperMethod === 'DELETE' && hasBody ? { data } : {}),
-      ...(upperMethod !== 'GET' && upperMethod !== 'DELETE' ? { data } : {})
-    });
+  const requestConfig = {
+    method: upperMethod,
+    baseURL: baseUrl,
+    url: urlPath,
+    headers,
+  };
 
+  // Only attach body if it's needed
+  if (hasBody || upperMethod === "POST" || upperMethod === "PUT" || upperMethod === "PATCH") {
+    requestConfig.data = data;
+  }
+
+  try {
+    const response = await axios(requestConfig);
     return response.data;
   } catch (error) {
-    throw error.response?.data || error.message;
+    // Handle rhythm throwing primitive strings or malformed response objects
+    const status = error?.response?.status ?? error.status ?? null;
+    const responseData = error?.response?.data ?? error.raw ?? null;
+
+    const message = typeof responseData === "string"
+      ? responseData
+      : responseData?.errorMessage || error.message || "Unknown Infor API error";
+
+    const customError = new Error(message);
+    customError.status = status;
+    customError.raw = responseData;
+
+    // Optional: log to help you debug these weird 404s
+    console.warn("❗ makeInforRequest failed:", {
+      url: urlPath,
+      method,
+      status,
+      message,
+      raw: responseData
+    });
+
+    throw customError;
   }
 }
-
