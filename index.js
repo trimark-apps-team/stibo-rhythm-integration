@@ -26,10 +26,9 @@ export const handler = async (event) => {
       },
     });
 
-    const fileNameType = "";
-    //const fileNameType = "WebClassification";
 
-    const latestFileKey = await getLatestS3File(s3Client, process.env.S3_BUCKET, process.env.S3_PREFIX, fileNameType);
+
+    const latestFileKey = await getLatestS3File(s3Client, process.env.S3_BUCKET, process.env.S3_PREFIX);
     console.log("Latest file to process:", latestFileKey);
 
     const getObjectParams = {
@@ -114,7 +113,6 @@ export const handler = async (event) => {
           const payloadType = 'Created';
       
           const categories = getCategories(classifications, payloadType);
-      console.log(categories);
           console.log(categories);
           // You can now work with processedData just like with handleXmlFromString
         } catch (err) {
