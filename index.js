@@ -1,7 +1,5 @@
-import dotenv from 'dotenv';
-dotenv.config();
-import axios from 'axios';
-import path from 'path';
+import loadEnvIfLocal from './utils/loadEnvIfLocal.js';
+await loadEnvIfLocal();
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import getCategories from './utils/convertPimCategories.js';
 import xml2js from 'xml2js';

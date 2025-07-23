@@ -1,6 +1,6 @@
 import axios from 'axios';
-import dotenv from 'dotenv';
-dotenv.config();
+import loadEnvIfLocal from './utils/loadEnvIfLocal.js';
+await loadEnvIfLocal();
 
 export async function generateGenericRhythmToken() {
   try {
