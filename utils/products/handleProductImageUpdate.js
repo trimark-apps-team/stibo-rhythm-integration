@@ -1,34 +1,38 @@
-export default function handleProductImageUpdate(itemJson) {
+  export default function handleProductImageUpdate(itemJson) {
     const productsArray = Object.values(itemJson["data"]["STEP-ProductInformation"].Products.Product);
   
-    const productImages = productsArray.flatMap(product => {
+    const productImageMap = new Map();
+  
+    for (const product of productsArray) {
       const refs = Array.isArray(product.AssetCrossReference)
         ? product.AssetCrossReference
         : [product.AssetCrossReference];
   
-      return refs
-        .filter(ref => ref?.Asset?.UserTypeID === 'ProductImage')
-        .map(ref => ({
-          pimId: product.ID,
-          keyvalue: product.KeyValue,
-          name: product.Name,
-          imageurl: ref.Asset?.Values?.['AssetDownload.AssetURLAttribute']
-        }));
-    });
+      const imageRefs = refs.filter(ref => ref?.Asset?.UserTypeID === 'ProductImage');
   
-    const rhythmRequestBodies = productImages.map(image => ({
-      ...image,
-      imagePayload: [
-        {
+      for (const ref of imageRefs) {
+        const imageurl = ref.Asset?.Values?.['AssetDownload.AssetURLAttribute'];
+        if (!imageurl) continue;
+  
+        const key = product.ID;
+        if (!productImageMap.has(key)) {
+          productImageMap.set(key, {
+            pimId: product.ID,
+            keyvalue: product.KeyValue,
+            name: product.Name,
+            imagePayload: [],
+          });
+        }
+  
+        productImageMap.get(key).imagePayload.push({
           imageType: "images",
           isDefault: false,
-          masterImage: image.imageurl,
-          previewImage: image.imageurl,
-          thumbImage: image.imageurl
-        }
-      ]
-    }));
+          masterImage: imageurl,
+          previewImage: imageurl,
+          thumbImage: imageurl,
+        });
+      }
+    }
   
-    return rhythmRequestBodies;
+    return Array.from(productImageMap.values());
   }
-  
