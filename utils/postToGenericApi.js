@@ -10,7 +10,7 @@ await loadEnvIfLocal();
  * @param {string} [token] - Optional bearer token for authorization.
  * @returns {Promise<object>} - The response data from the API.
  */
-export async function postToGenericApi(url, data, token) {
+export default async function postToGenericApi(url, data, token) {
   try {
     const headers = {
       'Content-Type': 'application/json',

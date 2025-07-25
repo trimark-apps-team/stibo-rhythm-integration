@@ -1,4 +1,4 @@
-import postToGenericApi from './postToGenericApi';
+import postToGenericApi from './postToGenericApi.js';
 
 export async function postItemsToRhythmApi(items, accessToken) {
   for (const item of items) {
