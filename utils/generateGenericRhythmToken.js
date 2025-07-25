@@ -4,7 +4,7 @@ await loadEnvIfLocal();
 
 export async function generateGenericRhythmToken() {
   try {
-    const tokenUrl = process.env.TOKEN_URL;
+    const tokenUrl = process.env.RHYTHM_TOKEN_URL;
 
     const payload = new URLSearchParams({
       grant_type: 'password',
