@@ -15,7 +15,7 @@ export default async function handleCategoryItems(filePath, outputName, payloadT
 }
 
 // Function to parse the XML and return the desired format
-function parseXmlToWebsiteCategories(xmlString, payloadType) {
+export function parseXmlToWebsiteCategories(xmlString, payloadType) {
     const parser = new DOMParser();
     const xmlDoc = parser.parseFromString(xmlString, "application/xml");
   
@@ -52,24 +52,35 @@ function parseXmlToWebsiteCategories(xmlString, payloadType) {
             .map(s => s.trim())
             .filter(Boolean);
 
-        const keyNode = valueNodes.find(
-            valueNode => valueNode.getAttribute("AttributeID") === "PMDM.AT.WebHierarchyKey"
-        );
-        const key = keyNode ? keyNode.textContent : "";
+        var inforStatus = "";
+        var webHierarchyKey = "";
+
+        for (const valueNode of valueNodes) {
+            const attrId = valueNode.getAttribute("AttributeID");
+            
+            if (attrId === "PMDM.AT.InforStatus") {
+               inforStatus = valueNode.textContent;
+            }
+
+
+            if (attrId === "PMDM.AT.WebHierarchyKey") {
+               webHierarchyKey = valueNode.textContent;
+            }
+        }
 
         const categoryData = {
             context: "catalogs::categories::items",
             data: {
                 items: linkedGoldenRecords,
-                key: key,
-                recipientEmails: ["xxx@yyy.com"]
+                key: webHierarchyKey,
+                recipientEmails: ["ben.ray@trimarkusa.com"]
             },
             dataFormatVersion: 0,
             dataId: classificationId,
             groupId: "groupId",
             notes: "notes",
             source: "source",
-            type: payloadType
+            type: inforStatus
         };
 
         categories.push(categoryData);

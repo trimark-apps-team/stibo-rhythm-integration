@@ -1,7 +1,6 @@
 import loadEnvIfLocal from './utils/loadEnvIfLocal.js';
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import { convertPimXmlFromString } from './utils/convertPimXml.js'; // adjust the path if needed
-import xml2js from 'xml2js';
 import buildConfig from './utils/buildConfig.js';
 import { makeInforRequest } from './infor/inforAPIClient.js';
 import getLatestS3File from './utils/uploads/getLatestS3File.js';
@@ -13,6 +12,8 @@ import processProductImages from './utils/products/processProductImages.js';
 import processProductResources from './utils/products/processProductResources.js';
 import { generateGenericRhythmToken } from './utils/generateGenericRhythmToken.js';
 import { postToGenericApi } from './utils/postToGenericApi.js';
+import { parseXmlToWebsiteCategories } from './utils/taxonomy/handleCategoryItems.js';
+import { postItemsToRhythmApi } from './utils/postItemsToRhythmApi.js';
 
 export const handler = async (event) => {
   await loadEnvIfLocal();
@@ -92,46 +93,29 @@ export const handler = async (event) => {
         break;
 
         case filename.includes('WebClassification'):
-          console.log(`Handle WebClassification file: ${filename}`);
-        
           try {
             const tokenData = await generateGenericRhythmToken();
-            console.log('Access Token:', tokenData.access_token);
         
-            // Parse XML using xml2js directly
-            const parser = new xml2js.Parser({ explicitArray: false, mergeAttrs: true });
-            const processedData = await parser.parseStringPromise(fileContent);
-            console.log('Processed data:', processedData);
+            // Handle Website Categories
+            const websiteCategories = parseXmlToWebsiteCategories(fileContent);
+            //console.log(websiteCategories);
+            await postItemsToRhythmApi(websiteCategories, tokenData.access_token);
         
-            try {
-              const allCategories = convertPimXmlFromString(fileContent);
-              const triMarketPlaceCategories = allCategories.filter(
-                (item) =>
-                  item.data?.internalName?.startsWith('TRMK_TriMarketPlace')
-              );
-   
-              for (const item of triMarketPlaceCategories) {
-                try {
-                  const response = await postToGenericApi(
-                    process.env.RHYTHM_GENERIC_ENDPOINT,
-                    item,
-                    tokenData.access_token
-                  );
-                  console.log(`API success for ${item.data.internalName}:`, response);
-                } catch (apiError) {
-                  console.error(`API call failed for ${item.data.internalName}:`, apiError.message);
-                }
-              }
+            // Handle TriMarketPlace Categories
+            const allCategories = convertPimXmlFromString(fileContent);
+            const triMarketPlaceCategories = allCategories.filter(
+              (item) => item.data?.internalName?.startsWith('TRMK_TriMarketPlace')
+            );
         
-            } catch (parseError) {
-              console.error('Failed to parse XML into structured format:', parseError.message);
-            }
+            //console.log(triMarketPlaceCategories);
+            await postItemsToRhythmApi(triMarketPlaceCategories, tokenData.access_token);
         
           } catch (err) {
-            console.error('Token generation or file processing error:', err);
+            console.error('Error during processing WebClassification file:', err.message || err);
           }
         
           break;
+        
 
       default:
         console.log(`Unknown file type, no specific handler for: ${filename}`);
