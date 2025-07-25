@@ -8,10 +8,10 @@ export async function generateGenericRhythmToken() {
 
     const payload = new URLSearchParams({
       grant_type: 'password',
-      username: process.env.TOKEN_USERNAME,
-      password: process.env.TOKEN_PASSWORD,
-      client_id: process.env.TOKEN_CLIENT_ID,
-      client_secret: process.env.TOKEN_CLIENT_SECRET
+      username: process.env.RHYTHM_TOKEN_USERNAME,
+      password: process.env.RHYTHM_TOKEN_PASSWORD,
+      client_id: process.env.RHYTHM_TOKEN_CLIENT_ID,
+      client_secret: process.env.RHYTHM_TOKEN_CLIENT_SECRET
     });
 
     const response = await axios.post(tokenUrl, payload.toString(), {

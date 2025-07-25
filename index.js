@@ -1,6 +1,6 @@
 import loadEnvIfLocal from './utils/loadEnvIfLocal.js';
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
-import getCategories from './utils/convertPimCategories.js';
+import { convertPimXmlFromString } from './utils/convertPimXml.js'; // adjust the path if needed
 import xml2js from 'xml2js';
 import buildConfig from './utils/buildConfig.js';
 import { makeInforRequest } from './infor/inforAPIClient.js';
@@ -12,7 +12,7 @@ import processProductAttributes from './utils/products/processProductAttributes.
 import processProductImages from './utils/products/processProductImages.js';
 import processProductResources from './utils/products/processProductResources.js';
 import { generateGenericRhythmToken } from './utils/generateGenericRhythmToken.js';
-
+import { postToGenericApi } from './utils/postToGenericApi.js';
 
 export const handler = async (event) => {
   await loadEnvIfLocal();
@@ -25,8 +25,6 @@ export const handler = async (event) => {
         secretAccessKey: process.env.S3_SECRET,
       },
     });
-
-
 
     const latestFileKey = await getLatestS3File(s3Client, process.env.S3_BUCKET, process.env.S3_PREFIX);
     console.log("Latest file to process:", latestFileKey);
@@ -93,33 +91,47 @@ export const handler = async (event) => {
         }
         break;
 
-      case filename.includes('WebClassification'):
-        console.log(`Handle Webclassification file: ${filename}`);
-       
-        try {
-          const tokenData = await generateGenericRhythmToken();
-          console.log('Access Token:', tokenData.access_token);
+        case filename.includes('WebClassification'):
+          console.log(`Handle WebClassification file: ${filename}`);
         
-          // Parse XML using xml2js directly
-          const parser = new xml2js.Parser({ explicitArray: false, mergeAttrs: true });
-          const processedData = await parser.parseStringPromise(fileContent);
-          console.log("Processed data:", processedData);
-          const classifications = processedData['STEP-ProductInformation']?.Classifications?.Classification;
-
-          if (!classifications) {
-            throw new Error('No valid classification data found in the input...');
+          try {
+            const tokenData = await generateGenericRhythmToken();
+            console.log('Access Token:', tokenData.access_token);
+        
+            // Parse XML using xml2js directly
+            const parser = new xml2js.Parser({ explicitArray: false, mergeAttrs: true });
+            const processedData = await parser.parseStringPromise(fileContent);
+            console.log('Processed data:', processedData);
+        
+            try {
+              const allCategories = convertPimXmlFromString(fileContent);
+              const triMarketPlaceCategories = allCategories.filter(
+                (item) =>
+                  item.data?.internalName?.startsWith('TRMK_TriMarketPlace')
+              );
+   
+              for (const item of triMarketPlaceCategories) {
+                try {
+                  const response = await postToGenericApi(
+                    process.env.RHYTHM_GENERIC_ENDPOINT,
+                    item,
+                    tokenData.access_token
+                  );
+                  console.log(`API success for ${item.data.internalName}:`, response);
+                } catch (apiError) {
+                  console.error(`API call failed for ${item.data.internalName}:`, apiError.message);
+                }
+              }
+        
+            } catch (parseError) {
+              console.error('Failed to parse XML into structured format:', parseError.message);
+            }
+        
+          } catch (err) {
+            console.error('Token generation or file processing error:', err);
           }
-      
-          const payloadType = 'Created';
-      
-          const categories = getCategories(classifications, payloadType);
-          console.log(categories);
-          // You can now work with processedData just like with handleXmlFromString
-        } catch (err) {
-          console.error("Error:", err);
-        }
         
-        break;
+          break;
 
       default:
         console.log(`Unknown file type, no specific handler for: ${filename}`);
@@ -138,4 +150,3 @@ export const handler = async (event) => {
     };
   }
 };
-
