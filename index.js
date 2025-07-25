@@ -11,7 +11,6 @@ import processProductAttributes from './utils/products/processProductAttributes.
 import processProductImages from './utils/products/processProductImages.js';
 import processProductResources from './utils/products/processProductResources.js';
 import { generateGenericRhythmToken } from './utils/generateGenericRhythmToken.js';
-import { postToGenericApi } from './utils/postToGenericApi.js';
 import { parseXmlToWebsiteCategories } from './utils/taxonomy/handleCategoryItems.js';
 import { postItemsToRhythmApi } from './utils/postItemsToRhythmApi.js';
 
