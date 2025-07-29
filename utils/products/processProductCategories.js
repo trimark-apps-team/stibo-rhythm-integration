@@ -1,193 +1,120 @@
-import buildConfig from '../buildConfig.js';
 import { generateGenericRhythmToken } from '../generateGenericRhythmToken.js';
-import  postToGenericApi  from '../postToGenericApi.js';
-
-export default async function processProductCategories(jsonData) {
-
-
- try {
-    const classificationRoot = jsonData["data"]["STEP-ProductInformation"].Classifications.Classification;
+import postToGenericApi from '../postToGenericApi.js';
+import loadEnvIfLocal from '../loadEnvIfLocal.js';
+await loadEnvIfLocal();
 
 
-console.log(classificationRoot);
+export default async function processProductCategories(json, token) {
+  console.log("json");
+  console.log(json.data);
 
+  const classifications =
+    json.data?.["STEP-ProductInformation"]?.Classifications?.Classification;
 
-    function extractCategories(classificationObj) {
-      const categories = [];
+  console.log("Raw classifications:");
+  console.log(classifications);
 
-      for (const key in classificationObj) {
-        if (!classificationObj.hasOwnProperty(key)) continue;
-
-        const category = classificationObj[key];
-
-        console.log('category');
-        console.log(category);
-
-        // Extract top-level info
-        const categoryName = category.Name || "Unnamed Category";
-        const inforStatus = category['PMDM.AT.InforStatus'] || "Unknown";
-        const webHierarchyKey = category['PMDM.AT.WebHierarchyKey'] || "Unknown";
-        const rhythmInternalName = category['PMDM.AT.RhythmInternalName'] || "Unknown";
-        const linkedGoldenRecords = category['PMDM.AT.LinkedGoldenRecords'] || "Unknown";
-
-        const metadata = Array.isArray(category.MetaData)
-          ? category.MetaData.reduce((acc, meta) => {
-              acc[meta.AttributeID] = meta.Value;
-              return acc;
-            }, {})
-          : {};
-
-        categories.push({
-          context: "catalogs::categories",
-          data: {
-            items: linkedGoldenRecords.split(','),
-            key: webHierarchyKey,
-            recipientEmails: ["ben.ray@trimarkusa.com"]
-          },
-          dataFormatVersion: 0,
-          dataId: category.ID,
-          groupId: "groupId",
-          notes: "",
-          source: "Stibo",
-          type: inforStatus
-        });
-
-        // Recursively process subcategories
-        if (category.Classification) {
-          const subCategories = extractCategories(category.Classification);
-          categories.push(...subCategories);
-        }
-      }
-
-      return categories;
-    }
-
-    const allCategories = extractCategories(classificationRoot);
-    console.log('Processed data for Categories:', allCategories);
-
-    // Optional filtering
-    const triMarketPlaceCategories = allCategories.filter(
-      (item) => item.data?.internalName?.startsWith('TRMK_TriMarketPlace')
-    );
-
-    console.log('TriMarketPlace Categories:', triMarketPlaceCategories);
-
-    // Uncomment to send to API
-    
-    const tokenData = await generateGenericRhythmToken();
-    // for (const item of triMarketPlaceCategories) {
-    //   try {
-    //     const response = await postToGenericApi(
-    //       process.env.RHYTHM_GENERIC_ENDPOINT,
-    //       item,
-    //       tokenData.access_token
-    //     );
-    //     console.log(`API success for ${item.data.internalName}:`, response);
-    //   } catch (apiError) {
-    //     console.error(`API call failed for ${item.data.internalName}:`, apiError.message);
-    //   }
-    // }
-    
-
-  } catch (err) {
-    console.error('Error in processProductCategories:', err);
+  if (!classifications || typeof classifications !== "object") {
+    console.warn("No classifications found.");
+    return [];
   }
 
+  const categories = [];
 
+  function walkClassification(node) {
+    if (!node || typeof node !== "object") return;
 
+    const isWebsiteCategory =
+      node?.UserTypeID === "PMDM.CLS.WebsiteCategory";
 
-
-
-
-
-
-  /*
-  try {
-    const classificationRoot = jsonData["data"]["STEP-ProductInformation"].Classifications.Classification;
-
-    function extractCategories(classificationObj) {
-      const categories = [];
-
-      for (const key in classificationObj) {
-        if (!classificationObj.hasOwnProperty(key)) continue;
-
-        const category = classificationObj[key];
-
-        // Extract top-level info
-        const categoryName = category.Name || "Unnamed Category";
-        const inforStatus = category['PMDM.AT.InforStatus'] || "Unknown";
-        const webHierarchyKey = category['PMDM.AT.WebHierarchyKey'] || "Unknown";
-        const rhythmInternalName = category['PMDM.AT.RhythmInternalName'] || "Unknown";
-
-        const metadata = Array.isArray(category.MetaData)
-          ? category.MetaData.reduce((acc, meta) => {
-              acc[meta.AttributeID] = meta.Value;
-              return acc;
-            }, {})
-          : {};
-
-        categories.push({
-          context: "catalogs::categories",
-          data: {
-            internalName: rhythmInternalName,
-            isVisible: inforStatus === "Updated",
-            key: webHierarchyKey,
-            texts: [
-              {
-                description: metadata["PMDM.AT.PageDescription"] || "No Description",
-                languageCode: "en",
-                longDescription: metadata["PMDM.AT.PageTitle"] || "No Title",
-                name: categoryName,
-              }
-            ],
-            recipientEmails: ["ben.ray@trimarkusa.com"]
-          },
-          dataFormatVersion: 0,
-          dataId: "dataId",
-          groupId: "groupId",
-          notes: "notes",
-          source: "source",
-          type: "Created"
-        });
-
-        // Recursively process subcategories
-        if (category.Classification) {
-          const subCategories = extractCategories(category.Classification);
-          categories.push(...subCategories);
+    if (isWebsiteCategory) {
+      // Handle metadata flat structure
+      const metaMap = {};
+      for (const key in node) {
+        if (key.startsWith("PMDM.AT.")) {
+          metaMap[key] = node[key];
         }
       }
 
-      return categories;
+      categories.push({
+        id: node.ID,
+        name: node.Name || "Unnamed",
+        inforStatus: metaMap["PMDM.AT.InforStatus"] || "Unknown",
+        webHierarchyKey: metaMap["PMDM.AT.WebHierarchyKey"] || "Unknown",
+        rhythmInternalName:
+          metaMap["PMDM.AT.RhythmInternalName"] || "Unknown",
+        linkedGoldenRecords: (metaMap["PMDM.AT.LinkedGoldenRecords"] || "")
+          .split(",")
+          .map((id) => id.trim())
+          .filter(Boolean),
+      });
     }
 
-    const allCategories = extractCategories(classificationRoot);
-    console.log('Processed data for Categories:', allCategories);
-
-    // Optional filtering
-    const triMarketPlaceCategories = allCategories.filter(
-      (item) => item.data?.internalName?.startsWith('TRMK_TriMarketPlace')
-    );
-
-    console.log('TriMarketPlace Categories:', triMarketPlaceCategories);
-
-    // Uncomment to send to API
-    
-    const tokenData = await generateGenericRhythmToken();
-    for (const item of triMarketPlaceCategories) {
-      try {
-        const response = await postToGenericApi(
-          process.env.RHYTHM_GENERIC_ENDPOINT,
-          item,
-          tokenData.access_token
-        );
-        console.log(`API success for ${item.data.internalName}:`, response);
-      } catch (apiError) {
-        console.error(`API call failed for ${item.data.internalName}:`, apiError.message);
+    // Recurse into nested Classification(s)
+    const children = node.Classification;
+    if (children && typeof children === "object") {
+      for (const key in children) {
+        const childNode = children[key];
+        const childArray = Array.isArray(childNode)
+          ? childNode
+          : [childNode];
+        for (const child of childArray) {
+          walkClassification(child);
+        }
       }
     }
-    
+  }
 
-  } catch (err) {
-    console.error('Error in processProductCategories:', err);
-  }*/
+  // Top-level is an object, not array — walk each classification
+  for (const key in classifications) {
+    walkClassification(classifications[key]);
+  }
+
+  console.log("Extracted categories:");
+  console.log(categories);
+
+const updatedRecord =  categories.map((record) => ({
+  context: 'catalogs::categories::items',
+  data: {
+    items: record.linkedGoldenRecords || [],
+    key: record.webHierarchyKey,
+    recipientEmails: ['ben.ray@trimarkusa.com'],
+  },
+  dataFormatVersion: 0,
+  dataId: record.id,
+  groupId: 'groupId',
+  notes: '',
+  source: 'Stibo',
+  type: 'Updated', // or 'Created', depending on your use case
+}));
+
+
+
+ // 4) Generate token once
+ const accessToken = await generateGenericRhythmToken();
+
+ // 5) Loop & send each payload
+ 
+ for (const item of updatedRecord) {
+   try {
+     const response = await postToGenericApi(
+       process.env.RHYTHM_GENERIC_ENDPOINT,
+       item,
+       accessToken
+     );
+     console.log(
+       `API success for ${item.data.key}:`, response
+     );
+   } catch (apiError) {
+     console.error(
+       `API failed for ${item.data.key}:`, apiError.message
+     );
+   }
+ }
+  
+
+console.log(updatedRecord);
+
+
+  return categories;
 }

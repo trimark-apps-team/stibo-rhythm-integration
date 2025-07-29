@@ -10,6 +10,7 @@ import streamToString from './utils/streamToString.js';
 import processProductAttributes from './utils/products/processProductAttributes.js';
 import processProductImages from './utils/products/processProductImages.js';
 import processProductResources from './utils/products/processProductResources.js';
+import processProductCategories from './utils/products/processProductCategories.js';
 import { generateGenericRhythmToken } from './utils/generateGenericRhythmToken.js';
 import { parseXmlToWebsiteCategories } from './utils/taxonomy/handleCategoryItems.js';
 import { postItemsToRhythmApi } from './utils/postItemsToRhythmApi.js';
@@ -49,9 +50,10 @@ export const handler = async (event) => {
           const processedData = await handleXmlFromString(fileContent, "Products", true);
           console.log("Processed data:", processedData);
       
-          await processProductAttributes(processedData);
-          await processProductResources(processedData);
-          await processProductImages(processedData);
+         await processProductAttributes(processedData);
+         await processProductResources(processedData);
+         await processProductImages(processedData);
+         await processProductCategories(processedData);
         } catch (err) {
           console.error("Error:", err);
           // handle or rethrow error as needed
