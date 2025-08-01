@@ -70,31 +70,24 @@ export default async function processProductCategories(json, token) {
     walkClassification(classifications[key]);
   }
 
-  console.log("Extracted categories:");
-  console.log(categories);
-
-const updatedRecord =  categories.map((record) => ({
-  context: 'catalogs::categories::items',
-  data: {
-    items: record.linkedGoldenRecords || [],
-    key: record.webHierarchyKey,
-    recipientEmails: ['ben.ray@trimarkusa.com'],
-  },
-  dataFormatVersion: 0,
-  dataId: record.id,
-  groupId: 'groupId',
-  notes: '',
-  source: 'Stibo',
-  type: 'Updated', // or 'Created', depending on your use case
-}));
+  const updatedRecord =  categories.map((record) => ({
+    context: 'catalogs::categories::items',
+    data: {
+      items: record.linkedGoldenRecords || [],
+      key: record.id,
+      recipientEmails: ['ben.ray@trimarkusa.com'],
+    },
+    dataFormatVersion: 0,
+    dataId: record.id,
+    groupId: record.webHierarchyKey,
+    notes: '',
+    source: 'PIM',
+    type: record.inforStatus, 
+  }));
 
 
-
- // 4) Generate token once
  const accessToken = await generateGenericRhythmToken();
 
- // 5) Loop & send each payload
- 
  for (const item of updatedRecord) {
    try {
      const response = await postToGenericApi(
@@ -114,7 +107,6 @@ const updatedRecord =  categories.map((record) => ({
   
 
 console.log(updatedRecord);
-
 
   return categories;
 }
