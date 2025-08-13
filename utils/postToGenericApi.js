@@ -17,8 +17,9 @@ export default async function postToGenericApi(url, data, token) {
     };
 
     if (token) {
-      headers['Authorization'] = `Bearer ${token.access_token}`;
+      headers['Authorization'] = `Bearer ${token}`;
     }
+
 
     const response = await axios.post(url, data, { headers });
 
