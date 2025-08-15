@@ -22,13 +22,14 @@ function parseCategoriesRecursively(classificationNode) {
   function walk(node) {
     const name = resolveCategoryName(node.Name);
     const metadata = extractMetaData(node.MetaData);
+    const webkey = node.ID;
 
     const categoryJson = {
       context: 'catalogs::categories',
       data: {
         internalName: metadata['PMDM.AT.RhythmInternalName'] || 'Unknown',
         isVisible: metadata['PMDM.AT.InforStatus'] === 'Updated',
-        key: name,
+        key: webkey,
         texts: [
           {
             languageCode: 'en',

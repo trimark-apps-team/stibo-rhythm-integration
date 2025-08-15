@@ -97,18 +97,12 @@ export const handler = async (event) => {
           try {
             const tokenData = await generateGenericRhythmToken();
         
-            // Handle Website Categories
-            const websiteCategories = parseXmlToWebsiteCategories(fileContent);
-            //console.log(websiteCategories);
-            await postItemsToRhythmApi(websiteCategories, tokenData.access_token);
-        
             // Handle TriMarketPlace Categories
             const allCategories = convertPimXmlFromString(fileContent);
             const triMarketPlaceCategories = allCategories.filter(
               (item) => item.data?.internalName?.startsWith('TRMK_TriMarketPlace')
             );
         
-            //console.log(triMarketPlaceCategories);
             await postItemsToRhythmApi(triMarketPlaceCategories, tokenData.access_token);
         
           } catch (err) {
