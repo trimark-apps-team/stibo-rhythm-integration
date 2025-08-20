@@ -1,6 +1,6 @@
 import loadEnvIfLocal from './utils/loadEnvIfLocal.js';
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
-import { convertPimXmlFromString } from './utils/convertPimXml.js'; // adjust the path if needed
+import { convertPimXmlFromString, convertPimXmlToHierarchy } from './utils/convertPimXml.js'; // adjust the path if needed
 import buildConfig from './utils/buildConfig.js';
 import { makeInforRequest } from './infor/inforAPIClient.js';
 import getLatestS3File from './utils/uploads/getLatestS3File.js';
@@ -14,6 +14,7 @@ import processProductCategories from './utils/products/processProductCategories.
 import { generateGenericRhythmToken } from './utils/generateGenericRhythmToken.js';
 import { parseXmlToWebsiteCategories } from './utils/taxonomy/handleCategoryItems.js';
 import { postItemsToRhythmApi } from './utils/postItemsToRhythmApi.js';
+import postToGenericApi from './utils/postToGenericApi.js';
 
 export const handler = async (event) => {
   await loadEnvIfLocal();
@@ -96,14 +97,23 @@ export const handler = async (event) => {
         case filename.includes('WebClassification'):
           try {
             const tokenData = await generateGenericRhythmToken();
-        
-            // Handle TriMarketPlace Categories
-            const allCategories = convertPimXmlFromString(fileContent);
-            const triMarketPlaceCategories = allCategories.filter(
-              (item) => item.data?.internalName?.startsWith('TRMK_TriMarketPlace')
+            // handle category hierarchy
+            const allCategoriesHierarchy = convertPimXmlToHierarchy(fileContent);
+            console.log(allCategoriesHierarchy);
+            const response = await postToGenericApi(
+            'https://use1-api.rhyl.inforcloudsuite.com/events/generic',
+             allCategoriesHierarchy,
+              tokenData.access_token
             );
+
+
+            // Handle TriMarketPlace Categories
+             const allCategories = convertPimXmlFromString(fileContent);
+             const triMarketPlaceCategories = allCategories.filter(
+               (item) => item.data?.internalName?.startsWith('TRMK_TriMarketPlace')
+             );
         
-            await postItemsToRhythmApi(triMarketPlaceCategories, tokenData.access_token);
+             await postItemsToRhythmApi(triMarketPlaceCategories, tokenData.access_token);
         
           } catch (err) {
             console.error('Error during processing WebClassification file:', err.message || err);

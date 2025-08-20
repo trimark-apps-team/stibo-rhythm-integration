@@ -66,6 +66,131 @@ function parseCategoriesRecursively(classificationNode) {
   return output;
 }
 
+
+// NEW CLASSIFICATION
+function buildHierarchyFromClassifications(classifications, parentId = null, result = []) {
+  for (const cls of classifications) {
+
+    result.push({
+      parentKey: parentId,
+      childKey: cls.ID
+    });
+
+    // recurse if this classification has nested classifications
+    if (cls.Classification && cls.Classification.length > 0) {
+      buildHierarchyFromClassifications(cls.Classification, cls.ID, result);
+    }
+  }
+  return result;
+}
+
+function buildCatalog(meta, flatList, texts) {
+  return {
+    context: "catalogs",
+    data: {
+      internalName: meta.internalName,
+      key: meta.key,
+      startDate: meta.startDate,
+      endDate: meta.endDate,
+      categoryTree: buildHierarchyFromClassifications(flatList),
+      texts,
+      
+      recipientEmails: [
+        "ben.ray@trimarkusa.com"
+      ],
+      dataFormatVersion: 0,
+      dataId: "00000000-0000-0000-0000-000000000000",
+      groupId: "00000000-0000-0000-0000-000000000000",
+      notes: "",
+      source: "source"
+
+    },
+    type: "Updated"
+  };
+}
+
+function extractDates(meta) {
+  console.log(meta);
+  const result = {};
+
+  for (const item of meta.Value) {
+    console.log(item);
+    if (item.AttributeID === "PMDM.AT.StartDateTime") {
+      result.startDateTime = new Date(item['#text']); // convert to Date
+    }
+    if (item.AttributeID === "PMDM.AT.EndDateTime") {
+      result.endDateTime = new Date(item['#text']); // convert to Date
+    }
+  }
+
+  return result;
+}
+// END CLASSIFICATIONS
+
+
+export function convertPimXmlToHierarchy(xmlString, options = {}) {
+  const { filterByInternalNameSubstring } = options;
+
+  const parser = new XMLParser({
+    ignoreAttributes: false,
+    attributeNamePrefix: '',
+    parseAttributeValue: true,
+  });
+
+  const parsed = parser.parse(xmlString);
+
+  const classificationRoot =
+    parsed?.['STEP-ProductInformation']?.Classifications?.Classification;
+
+  if (!classificationRoot) {
+    throw new Error('No classifications found in XML.');
+  }
+
+  // Parse all categories (not filtered)
+  const allCategories = parseCategoriesRecursively(classificationRoot);
+
+  // Filter only TriMarketPlace
+  const triMarketPlaceOnly = classificationRoot.filter((item) => {
+    const name =
+      typeof item.Name === 'string' ? item.Name : item.Name?.['#text'];
+    return name === 'TriMarketPlace';
+  });
+
+  if (triMarketPlaceOnly.length === 0) {
+    throw new Error('TriMarketPlace classification not found.');
+  }
+
+  // Extract start/end dates
+  const catalogDate = extractDates(triMarketPlaceOnly[0].MetaData);
+  console.log(catalogDate);
+
+  // Build hierarchy
+  const hierarchy = buildHierarchyFromClassifications(
+    triMarketPlaceOnly[0].Classification,
+    null
+  );
+  // console.log(hierarchy);
+
+  // Example metadata + texts
+  const meta = {
+    internalName: 'Rhythm',
+    key: 'Rhythm',
+    startDate: catalogDate.startDateTime,
+    endDate: catalogDate.endDateTime,
+  };
+
+  const texts = [{ languageCode: 'en', name: 'TriMarketPlace' }];
+
+  // Build the catalog object
+  const catalogObject = buildCatalog(
+    meta,
+    triMarketPlaceOnly[0].Classification,
+    texts
+  );
+
+  return JSON.stringify(catalogObject, null, 2);
+}
+
 export function convertPimXmlFromString(xmlString, options = {}) {
   const { filterByInternalNameSubstring } = options;
 
