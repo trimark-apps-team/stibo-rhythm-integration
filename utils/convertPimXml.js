@@ -110,11 +110,10 @@ function buildCatalog(meta, flatList, texts) {
 }
 
 function extractDates(meta) {
-  console.log(meta);
   const result = {};
 
   for (const item of meta.Value) {
-    console.log(item);
+
     if (item.AttributeID === "PMDM.AT.StartDateTime") {
       result.startDateTime = new Date(item['#text']); // convert to Date
     }
@@ -126,7 +125,6 @@ function extractDates(meta) {
   return result;
 }
 // END CLASSIFICATIONS
-
 
 export function convertPimXmlToHierarchy(xmlString, options = {}) {
   const { filterByInternalNameSubstring } = options;
@@ -149,27 +147,14 @@ export function convertPimXmlToHierarchy(xmlString, options = {}) {
   // Parse all categories (not filtered)
   const allCategories = parseCategoriesRecursively(classificationRoot);
 
-  // Filter only TriMarketPlace
-  const triMarketPlaceOnly = classificationRoot.filter((item) => {
-    const name =
-      typeof item.Name === 'string' ? item.Name : item.Name?.['#text'];
-    return name === 'TriMarketPlace';
-  });
-
-  if (triMarketPlaceOnly.length === 0) {
-    throw new Error('TriMarketPlace classification not found.');
-  }
-
   // Extract start/end dates
-  const catalogDate = extractDates(triMarketPlaceOnly[0].MetaData);
-  console.log(catalogDate);
+  const catalogDate = extractDates(classificationRoot.MetaData);
 
   // Build hierarchy
   const hierarchy = buildHierarchyFromClassifications(
-    triMarketPlaceOnly[0].Classification,
+    classificationRoot.Classification,
     null
   );
-  // console.log(hierarchy);
 
   // Example metadata + texts
   const meta = {
@@ -184,7 +169,7 @@ export function convertPimXmlToHierarchy(xmlString, options = {}) {
   // Build the catalog object
   const catalogObject = buildCatalog(
     meta,
-    triMarketPlaceOnly[0].Classification,
+    classificationRoot.Classification,
     texts
   );
 
