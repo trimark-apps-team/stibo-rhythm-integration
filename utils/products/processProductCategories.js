@@ -3,6 +3,14 @@ import postToGenericApi from '../postToGenericApi.js';
 import loadEnvIfLocal from '../loadEnvIfLocal.js';
 await loadEnvIfLocal();
 
+function resolveToken(value) {
+  // Check if value is an object and has access_token
+  if (value && typeof value === 'object' && 'access_token' in value) {
+    return value.access_token;
+  }
+  // Otherwise, use the value directly
+  return value;
+}
 
 export default async function processProductCategories(json, token) {
   console.log("json");
@@ -86,8 +94,8 @@ export default async function processProductCategories(json, token) {
   }));
 
 
- const accessToken = await generateGenericRhythmToken();
 
+ const accessToken = resolveToken( await generateGenericRhythmToken());
  for (const item of updatedRecord) {
    try {
      const response = await postToGenericApi(
@@ -95,8 +103,9 @@ export default async function processProductCategories(json, token) {
        item,
        accessToken
      );
+
      console.log(
-       `API success for ${item.data.key}:`, response
+       `API success for: ${item.data.key}:`, response
      );
    } catch (apiError) {
      console.error(
