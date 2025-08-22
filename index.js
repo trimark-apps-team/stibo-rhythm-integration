@@ -98,14 +98,23 @@ export const handler = async (event) => {
           try {
             const tokenData = await generateGenericRhythmToken();
             // handle category hierarchy
-            const allCategoriesHierarchy = convertPimXmlToHierarchy(fileContent);
-            console.log(allCategoriesHierarchy);
-            const response = await postToGenericApi(
-            'https://use1-api.rhyl.inforcloudsuite.com/events/generic',
-             allCategoriesHierarchy,
-              tokenData.access_token
-            );
+            const createdCategories = convertPimXmlToHierarchy(fileContent, "Created");
+            const updatedCategories = convertPimXmlToHierarchy(fileContent, "Updated");
+            const deletedCategories = convertPimXmlToHierarchy(fileContent, "Deleted");
 
+            const createdResult = await postToGenericApi('https://use1-api.rhyl.inforcloudsuite.com/events/generic',
+              createdCategories, tokenData.access_token
+            )
+            const updatedResult = await postToGenericApi('https://use1-api.rhyl.inforcloudsuite.com/events/generic',
+              updatedCategories, tokenData.access_token
+            )
+            const deletedResult = await postToGenericApi('https://use1-api.rhyl.inforcloudsuite.com/events/generic',
+              deletedCategories, tokenData.access_token
+            )
+
+            console.log(createdResult);
+            console.log(updatedResult);
+            console.log(deletedResult);
 
             // Handle TriMarketPlace Categories
              const allCategories = convertPimXmlFromString(fileContent);
@@ -113,7 +122,7 @@ export const handler = async (event) => {
                (item) => item.data?.internalName?.startsWith('TRMK_TriMarketPlace')
              );
         
-             await postItemsToRhythmApi(triMarketPlaceCategories, tokenData.access_token);
+            await postItemsToRhythmApi(triMarketPlaceCategories, tokenData.access_token);
         
           } catch (err) {
             console.error('Error during processing WebClassification file:', err.message || err);

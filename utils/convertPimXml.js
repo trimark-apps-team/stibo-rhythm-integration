@@ -68,23 +68,30 @@ function parseCategoriesRecursively(classificationNode) {
 
 
 // NEW CLASSIFICATION
-function buildHierarchyFromClassifications(classifications, parentId = null, result = []) {
+function buildHierarchyFromClassifications(classifications, parentId = null, result = [], payloadType="Created") {
   for (const cls of classifications) {
 
-    result.push({
-      parentKey: parentId,
-      childKey: cls.ID
-    });
+    const metaValues = cls.MetaData?.Value || []; // safe default if MetaData missing
+
+    // true if at least one entry has "#text" === <payloadType>
+    const hasUpdated = metaValues.some(entry => entry['#text'] === payloadType);
+  
+    if (hasUpdated) {
+      result.push({
+        parentKey: parentId,
+        childKey: cls.ID
+      });
+    }
 
     // recurse if this classification has nested classifications
     if (cls.Classification && cls.Classification.length > 0) {
-      buildHierarchyFromClassifications(cls.Classification, cls.ID, result);
+      buildHierarchyFromClassifications(cls.Classification, cls.ID, result, payloadType);
     }
   }
   return result;
 }
 
-function buildCatalog(meta, flatList, texts) {
+function buildCatalog(meta, flatList, texts, payloadType) {
   return {
     context: "catalogs",
     data: {
@@ -105,7 +112,7 @@ function buildCatalog(meta, flatList, texts) {
       source: "source"
 
     },
-    type: "Updated"
+    type: payloadType
   };
 }
 
@@ -126,9 +133,8 @@ function extractDates(meta) {
 }
 // END CLASSIFICATIONS
 
-export function convertPimXmlToHierarchy(xmlString, options = {}) {
-  const { filterByInternalNameSubstring } = options;
-
+export function convertPimXmlToHierarchy(xmlString, payloadType) {
+ 
   const parser = new XMLParser({
     ignoreAttributes: false,
     attributeNamePrefix: '',
@@ -153,7 +159,7 @@ export function convertPimXmlToHierarchy(xmlString, options = {}) {
   // Build hierarchy
   const hierarchy = buildHierarchyFromClassifications(
     classificationRoot.Classification,
-    null
+    null, [], payloadType
   );
 
   // Example metadata + texts
@@ -170,7 +176,8 @@ export function convertPimXmlToHierarchy(xmlString, options = {}) {
   const catalogObject = buildCatalog(
     meta,
     classificationRoot.Classification,
-    texts
+    texts,
+    payloadType
   );
 
   return JSON.stringify(catalogObject, null, 2);
