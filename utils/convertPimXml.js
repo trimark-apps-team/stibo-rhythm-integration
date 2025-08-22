@@ -68,7 +68,7 @@ function parseCategoriesRecursively(classificationNode) {
 
 
 // NEW CLASSIFICATION
-function buildHierarchyFromClassifications(classifications, parentId = null, result = [], payloadType="Created") {
+function buildHierarchyFromClassifications(classifications, parentId = null, result = [], payloadType) {
   for (const cls of classifications) {
 
     const metaValues = cls.MetaData?.Value || []; // safe default if MetaData missing
@@ -92,6 +92,7 @@ function buildHierarchyFromClassifications(classifications, parentId = null, res
 }
 
 function buildCatalog(meta, flatList, texts, payloadType) {
+  console.log(flatList);
   return {
     context: "catalogs",
     data: {
@@ -99,7 +100,7 @@ function buildCatalog(meta, flatList, texts, payloadType) {
       key: meta.key,
       startDate: meta.startDate,
       endDate: meta.endDate,
-      categoryTree: buildHierarchyFromClassifications(flatList),
+      categoryTree: buildHierarchyFromClassifications(flatList, null, [], payloadType),
       texts,
       
       recipientEmails: [
@@ -157,10 +158,6 @@ export function convertPimXmlToHierarchy(xmlString, payloadType) {
   const catalogDate = extractDates(classificationRoot.MetaData);
 
   // Build hierarchy
-  const hierarchy = buildHierarchyFromClassifications(
-    classificationRoot.Classification,
-    null, [], payloadType
-  );
 
   // Example metadata + texts
   const meta = {
